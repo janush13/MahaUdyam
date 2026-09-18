@@ -1,0 +1,28 @@
+-- Prepares PostgreSQL for pgvector (architecture requirement, Step 2 §11)
+-- WITHOUT creating the embedding column itself yet.
+--
+-- The `regulatory_versions` table does NOT get an `embedding vector(N)`
+-- column in this migration. The embedding provider is genuinely
+-- unconfirmed — Claude (Anthropic) has no first-party embeddings endpoint,
+-- so a separate provider (Voyage AI, OpenAI, Cohere, or another) must be
+-- selected before a vector dimension can be treated as final, and
+-- different providers produce different-width vectors (commonly anywhere
+-- from 1024 to 3072 dimensions). Adding the column now with a guessed
+-- dimension would silently couple this migration to an unverified choice.
+--
+-- What this migration DOES do: enables the extension so `CREATE TYPE
+-- vector(N)`-backed columns and vector indexes (ivfflat/HNSW) are available
+-- once that decision is made — see prisma/schema.prisma's RegulatoryVersion
+-- model comment for the exact follow-up migration shape
+-- (`Unsupported("vector(N)")` field + a raw-SQL `ALTER TABLE ... ADD COLUMN
+-- embedding vector(N)`), which is a later (RAG-implementation) step, not
+-- this one.
+--
+-- REQUIRES the `pgvector/pgvector:pg16` PostgreSQL image (see
+-- docker-compose.yml) — this extension's binaries are not bundled with the
+-- plain `postgres:16` image used in Step 1.
+--
+-- NOT YET APPLIED to a live database — see this migration folder's sibling
+-- `20260918144817_init` for the same caveat and the Step 2 report for why.
+
+CREATE EXTENSION IF NOT EXISTS vector;

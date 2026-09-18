@@ -1,0 +1,72 @@
+# MahaUdyam One backend — development foundation.
+#
+# Only the services genuinely required for the current implementation step
+# are defined here (backend + postgres). Redis, a message broker, search,
+# ClamAV, and any other infrastructure are deliberately absent until the
+# implementation step that actually needs them — see backend/README.md.
+
+services:
+  backend:
+    build:
+      context: .
+      target: production
+    container_name: mahaudyam-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-mahaudyam}:${POSTGRES_PASSWORD:-mahaudyam}@postgres:5432/${POSTGRES_DB:-mahaudyam_dev}
+    ports:
+      - '3000:3000'
+    volumes:
+      - backend_storage:/app/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - mahaudyam-network
+
+  postgres:
+    # pgvector/pgvector:pg16 is the official pgvector project's PostgreSQL 16
+    # image — a drop-in replacement for postgres:16 with the pgvector
+    # extension binaries pre-installed. Plain postgres:16-alpine (used in
+    # Step 1) does NOT include pgvector, and `CREATE EXTENSION vector` would
+    # fail against it. Switched here because Step 2 prepares Postgres for
+    # pgvector (architecture requirement, embedding column itself deferred —
+    # see prisma/schema.prisma and the Step 2 report).
+    image: pgvector/pgvector:pg16
+    container_name: mahaudyam-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mahaudyam}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mahaudyam}
+      POSTGRES_DB: ${POSTGRES_DB:-mahaudyam_dev}
+    ports:
+      # Host port 5432 is already bound by a pre-existing native PostgreSQL
+      # installation on this machine (unrelated to this project — must not
+      # be touched or reconfigured). Mapped to 5433 on the host instead;
+      # the container's internal port stays 5432, so the `backend` service's
+      # DATABASE_URL above (which uses the Docker network hostname
+      # `postgres:5432`, not the host mapping) is unaffected. Tools running
+      # directly on the host (e.g. `npm run start:dev`, `psql`) must connect
+      # via localhost:5433 — see backend/.env.
+      - '5433:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-mahaudyam}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mahaudyam-network
+
+volumes:
+  postgres_data:
+    name: mahaudyam_postgres_data
+  backend_storage:
+    name: mahaudyam_backend_storage
+
+networks:
+  mahaudyam-network:
+    name: mahaudyam-network
