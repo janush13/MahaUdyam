@@ -1222,3 +1222,44 @@ model RetentionPolicy {
 
   @@map("retention_policy")
 }
+
+// --- KAGGLE DATASET REFERENCE TABLES ---
+
+model TradeLicenseRef {
+  id              String   @id @default(uuid())
+  license_number  String   @unique
+  status          String
+  expiration_date DateTime
+}
+
+model ElectricityLoadRef {
+  id              String @id @default(uuid())
+  subdivision     String
+  area            String
+  current_load    Float
+}
+
+model WaterQualityRef {
+  id              String @id @default(uuid())
+  location        String 
+  ph              Float
+  turbidity       Float
+  bod             Float
+  lead            Float
+}
+
+model FoodAdulterationRef {
+  id              String @id @default(uuid())
+  product_name    String
+  adulterant      String
+  health_risk     String
+  severity        String
+}
+
+model AgmarkPriceRef {
+  id              String @id @default(uuid())
+  commodity       String
+  grade           String
+  modal_price     Float
+  state           String
+}

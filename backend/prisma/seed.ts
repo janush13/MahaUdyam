@@ -1,5 +1,8 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
+import * as fs from 'fs';
+import * as readline from 'readline';
+import * as path from 'path';
 
 /**
  * Seeds SYSTEM CONFIGURATION only — the approved role roster, the minimal
@@ -148,3 +151,101 @@ main().catch(async (error: unknown) => {
   console.error(error);
   process.exit(1);
 });
+
+
+
+const prisma = new PrismaClient();
+
+// Dependency-free CSV line parser (handles commas inside quotes)
+function parseCSVLine(line: string): string[] {
+  const re = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+  return line.split(re).map(val => val.replace(/^"|"$/g, '').trim());
+}
+
+async function processCSV(fileName: string, processRow: (columns: string[]) => Promise<void>) {
+  const filePath = path.join(__dirname, 'data', fileName);
+  if (!fs.existsSync(filePath)) return;
+
+  const fileStream = fs.createReadStream(filePath);
+  const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
+
+  let isHeader = true;
+  for await (const line of rl) {
+    if (isHeader) { isHeader = false; continue; } // Skip header row
+    if (!line.trim()) continue;
+    const columns = parseCSVLine(line);
+    try { await processRow(columns); } catch (e) { /* Skip malformed row */ }
+  }
+}
+
+async function main() {
+  console.log('Seeding Kaggle Data...');
+
+  // 1. Trade Licenses
+  await processCSV('trade_license_sampled_500.csv', async (col) => {
+    if (!col[18] || !col[25]) return;
+    await prisma.tradeLicenseRef.upsert({
+      where: { license_number: col[18] }, // LICENSE NUMBER
+      update: {},
+      create: {
+        license_number: col[18],
+        status: col[28] || 'UNKNOWN', // LICENSE STATUS
+        expiration_date: new Date(col[25]), // LICENSE TERM EXPIRATION DATE
+      },
+    });
+  });
+
+  // 2. Electricity Load
+  await processCSV('(ELECTRICITY)TG-NPDCL_consumption_detail_commercial_JANUARY-2025.csv', async (col) => {
+    await prisma.electricityLoadRef.create({
+      data: {
+        subdivision: col[2], // SubDivision
+        area: col[4], // Area
+        current_load: parseFloat(col[10] || '0'), // Load
+      },
+    });
+  });
+
+  // 3. Water Quality
+  await processCSV('Water_Quality_Dataset.csv', async (col) => {
+    await prisma.waterQualityRef.create({
+      data: {
+        location: col[1], // Location
+        ph: parseFloat(col[2] || '0'), // pH
+        turbidity: parseFloat(col[3] || '0'), // Turbidity
+        bod: parseFloat(col[6] || '0'), // BOD
+        lead: parseFloat(col[7] || '0'), // Lead
+      },
+    });
+  });
+
+  // 4. Food Adulteration
+  await processCSV('food_adulteration_data.csv', async (col) => {
+    await prisma.foodAdulterationRef.create({
+      data: {
+        product_name: col[1], // product_name
+        adulterant: col[4], // adulterant
+        severity: col[7], // severity
+        health_risk: col[8], // health_risk
+      },
+    });
+  });
+
+  // 5. Agmarknet
+  await processCSV('agmarknet_sampled_100_per_state.csv', async (col) => {
+    await prisma.agmarkPriceRef.create({
+      data: {
+        commodity: col[4], // Commodity
+        grade: col[6], // Grade
+        modal_price: parseFloat(col[9] || '0'), // Modal Price
+        state: col[11], // State
+      },
+    });
+  });
+
+  console.log('Kaggle Data Seeding Complete!');
+}
+
+main()
+  .catch((e) => { console.error(e); process.exit(1); })
+  .finally(async () => { await prisma.$disconnect(); });
