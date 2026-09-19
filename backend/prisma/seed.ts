@@ -4,157 +4,31 @@ import * as fs from 'fs';
 import * as readline from 'readline';
 import * as path from 'path';
 
-/**
- * Seeds SYSTEM CONFIGURATION only — the approved role roster, the minimal
- * permission set Step 4 actually implements, and their mapping. This is
- * platform configuration, not government data: it does not seed
- * departments, approval types, approval rules, schemes, or any other
- * statutory/regulatory content, because none of those can be sourced from
- * FRD/TRD/Blueprint without inventing real government configuration.
- *
- * Deliberately excludes INTEGRATION_ADMINISTRATOR and HELPDESK, which
- * appear in the TRD's stakeholder list but were deferred by the
- * architecture analysis — see prisma/schema.prisma's Department section
- * comment and the Step 2 report for the reasoning (no FRD screen or
- * permission row references either role).
- */
 const ROLES: Array<{ code: string; description: string }> = [
-  {
-    code: 'APPLICANT',
-    description: 'Entrepreneur/applicant managing enterprises, projects, and applications.',
-  },
-  {
-    code: 'SCRUTINY_OFFICER',
-    description: 'First-level departmental reviewer; recommends, never finally decides.',
-  },
-  {
-    code: 'APPROVING_AUTHORITY',
-    description: 'Final departmental decision-maker; sole holder of approve/reject authority.',
-  },
-  {
-    code: 'INSPECTOR',
-    description: 'Conducts site inspections and submits inspection reports.',
-  },
-  {
-    code: 'DEPT_ADMIN',
-    description: "Manages a department's configuration, staff, and SLA parameters.",
-  },
-  {
-    code: 'SCHEME_OFFICER',
-    description: 'Manages the scheme catalogue and incentive applications.',
-  },
-  {
-    code: 'GRIEVANCE_OFFICER',
-    description: 'Triages, routes, and resolves grievances.',
-  },
-  {
-    code: 'SYSTEM_ADMIN',
-    description: 'Technical administration only — never holds statutory decision authority.',
-  },
-  {
-    code: 'SUPER_ADMIN',
-    description: 'Cross-department platform governance and master data ownership.',
-  },
-  {
-    code: 'LEGAL_COMPLIANCE',
-    description: 'Authors/approves regulatory content; publishes regulatory knowledge.',
-  },
-  {
-    code: 'AUDITOR',
-    description: 'Independent, read-only, cross-cutting review of processes and audit trails.',
-  },
-  {
-    code: 'LEADERSHIP',
-    description: 'Read-only aggregated dashboards; no individual applicant/officer detail.',
-  },
+  { code: 'APPLICANT', description: 'Entrepreneur/applicant managing enterprises, projects, and applications.' },
+  { code: 'SCRUTINY_OFFICER', description: 'First-level departmental reviewer; recommends, never finally decides.' },
+  { code: 'APPROVING_AUTHORITY', description: 'Final departmental decision-maker; sole holder of approve/reject authority.' },
+  { code: 'INSPECTOR', description: 'Conducts site inspections and submits inspection reports.' },
+  { code: 'DEPT_ADMIN', description: "Manages a department's configuration, staff, and SLA parameters." },
+  { code: 'SCHEME_OFFICER', description: 'Manages the scheme catalogue and incentive applications.' },
+  { code: 'GRIEVANCE_OFFICER', description: 'Triages, routes, and resolves grievances.' },
+  { code: 'SYSTEM_ADMIN', description: 'Technical administration only — never holds statutory decision authority.' },
+  { code: 'SUPER_ADMIN', description: 'Cross-department platform governance and master data ownership.' },
+  { code: 'LEGAL_COMPLIANCE', description: 'Authors/approves regulatory content; publishes regulatory knowledge.' },
+  { code: 'AUDITOR', description: 'Independent, read-only, cross-cutting review of processes and audit trails.' },
+  { code: 'LEADERSHIP', description: 'Read-only aggregated dashboards; no individual applicant/officer detail.' },
 ];
 
-/**
- * Deliberately minimal — NOT the eventual full catalogue (ENTERPRISE_*,
- * APPLICATION_*, DOCUMENT_*, etc.), which belongs to the business modules
- * that actually implement those capabilities. These two are the only
- * capabilities Step 4 itself implements or gates (privileged role
- * assignment, via UsersService.assignRole — an internal service capability
- * with no public endpoint yet). Each future module adds its own permission
- * codes when it's actually built, per the architecture analysis's
- * "avoid hundreds of speculative permissions" guidance.
- */
 const PERMISSIONS: Array<{ code: string; description: string }> = [
   { code: 'USER_READ', description: "Read another user's account/role information." },
   { code: 'USER_MANAGE', description: 'Create, deactivate, or assign roles to user accounts.' },
 ];
 
-/**
- * Roles matching FRD's own stated capabilities: SUPER_ADMIN (cross-
- * department governance, FRD §4.9-adjacent), SYSTEM_ADMIN ("user account
- * provisioning/deactivation", FRD §4.9 explicitly), DEPT_ADMIN ("manage
- * users within their own department", FRD §4.6). Department-scoping of
- * DEPT_ADMIN's grant is enforced at the service/guard layer (§17's
- * primitives), not by a separate permission code.
- */
 const ROLE_PERMISSIONS: Record<string, string[]> = {
   SUPER_ADMIN: ['USER_READ', 'USER_MANAGE'],
   SYSTEM_ADMIN: ['USER_READ', 'USER_MANAGE'],
   DEPT_ADMIN: ['USER_READ', 'USER_MANAGE'],
 };
-
-async function main(): Promise<void> {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
-    throw new Error('DATABASE_URL is not set — cannot seed.');
-  }
-
-  const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
-
-  console.log('Seeding roles (system configuration — not statutory/government data)...');
-  for (const role of ROLES) {
-    await prisma.role.upsert({
-      where: { code: role.code },
-      update: { description: role.description },
-      create: role,
-    });
-  }
-  console.log(`Seeded ${ROLES.length} roles.`);
-
-  console.log('Seeding permissions...');
-  for (const permission of PERMISSIONS) {
-    await prisma.permission.upsert({
-      where: { code: permission.code },
-      update: { description: permission.description },
-      create: permission,
-    });
-  }
-  console.log(`Seeded ${PERMISSIONS.length} permissions.`);
-
-  console.log('Seeding role-permission mappings...');
-  let mappingCount = 0;
-  for (const [roleCode, permissionCodes] of Object.entries(ROLE_PERMISSIONS)) {
-    const role = await prisma.role.findUniqueOrThrow({ where: { code: roleCode } });
-
-    for (const permissionCode of permissionCodes) {
-      const permission = await prisma.permission.findUniqueOrThrow({ where: { code: permissionCode } });
-
-      await prisma.rolePermission.upsert({
-        where: { roleId_permissionId: { roleId: role.id, permissionId: permission.id } },
-        update: {},
-        create: { roleId: role.id, permissionId: permission.id },
-      });
-      mappingCount += 1;
-    }
-  }
-  console.log(`Seeded ${mappingCount} role-permission mappings.`);
-
-  await prisma.$disconnect();
-}
-
-main().catch(async (error: unknown) => {
-  console.error(error);
-  process.exit(1);
-});
-
-
-
-const prisma = new PrismaClient();
 
 // Dependency-free CSV line parser (handles commas inside quotes)
 function parseCSVLine(line: string): string[] {
@@ -164,7 +38,10 @@ function parseCSVLine(line: string): string[] {
 
 async function processCSV(fileName: string, processRow: (columns: string[]) => Promise<void>) {
   const filePath = path.join(__dirname, 'data', fileName);
-  if (!fs.existsSync(filePath)) return;
+  if (!fs.existsSync(filePath)) {
+    console.warn(`File not found: ${filePath}. Skipping...`);
+    return;
+  }
 
   const fileStream = fs.createReadStream(filePath);
   const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
@@ -178,74 +55,134 @@ async function processCSV(fileName: string, processRow: (columns: string[]) => P
   }
 }
 
-async function main() {
-  console.log('Seeding Kaggle Data...');
+async function main(): Promise<void> {
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error('DATABASE_URL is not set — cannot seed.');
+  }
 
-  // 1. Trade Licenses
-  await processCSV('trade_license_sampled_500.csv', async (col) => {
-    if (!col[18] || !col[25]) return;
-    await prisma.tradeLicenseRef.upsert({
-      where: { license_number: col[18] }, // LICENSE NUMBER
-      update: {},
-      create: {
-        license_number: col[18],
-        status: col[28] || 'UNKNOWN', // LICENSE STATUS
-        expiration_date: new Date(col[25]), // LICENSE TERM EXPIRATION DATE
-      },
+  // Instantiate PrismaClient once
+  const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
+
+  try {
+    // --- 1. SYSTEM CONFIGURATION SEEDING ---
+    console.log('Seeding roles (system configuration — not statutory/government data)...');
+    for (const role of ROLES) {
+      await prisma.role.upsert({
+        where: { code: role.code },
+        update: { description: role.description },
+        create: role,
+      });
+    }
+    console.log(`Seeded ${ROLES.length} roles.`);
+
+    console.log('Seeding permissions...');
+    for (const permission of PERMISSIONS) {
+      await prisma.permission.upsert({
+        where: { code: permission.code },
+        update: { description: permission.description },
+        create: permission,
+      });
+    }
+    console.log(`Seeded ${PERMISSIONS.length} permissions.`);
+
+    console.log('Seeding role-permission mappings...');
+    let mappingCount = 0;
+    for (const [roleCode, permissionCodes] of Object.entries(ROLE_PERMISSIONS)) {
+      const role = await prisma.role.findUniqueOrThrow({ where: { code: roleCode } });
+
+      for (const permissionCode of permissionCodes) {
+        const permission = await prisma.permission.findUniqueOrThrow({ where: { code: permissionCode } });
+
+        await prisma.rolePermission.upsert({
+          where: { roleId_permissionId: { roleId: role.id, permissionId: permission.id } },
+          update: {},
+          create: { roleId: role.id, permissionId: permission.id },
+        });
+        mappingCount += 1;
+      }
+    }
+    console.log(`Seeded ${mappingCount} role-permission mappings.`);
+
+    // --- 2. KAGGLE DATA SEEDING ---
+    console.log('\nSeeding Kaggle Data...');
+
+    // Trade Licenses
+    await processCSV('trade_license_sampled_500.csv', async (col) => {
+      const licenseNumber = col[18]?.trim();
+      const rawExpirationDate = col[25]?.trim();
+      if (!licenseNumber || !rawExpirationDate) return;
+
+      const expirationDate = new Date(rawExpirationDate);
+      if (Number.isNaN(expirationDate.getTime())) {
+        console.warn(`Skipping invalid expiration date for license ${licenseNumber}: ${rawExpirationDate}`);
+        return;
+      }
+
+      await prisma.tradeLicenseRef.upsert({
+        where: { license_number: licenseNumber },
+        update: { status: col[28] || 'UNKNOWN', expiration_date: expirationDate },
+        create: { license_number: licenseNumber, status: col[28] || 'UNKNOWN', expiration_date: expirationDate },
+      });
     });
-  });
 
-  // 2. Electricity Load
-  await processCSV('(ELECTRICITY)TG-NPDCL_consumption_detail_commercial_JANUARY-2025.csv', async (col) => {
-    await prisma.electricityLoadRef.create({
-      data: {
-        subdivision: col[2], // SubDivision
-        area: col[4], // Area
-        current_load: parseFloat(col[10] || '0'), // Load
-      },
+    // Electricity Load
+    await processCSV('(ELECTRICITY)TG-NPDCL_consumption_detail_commercial_JANUARY-2025.csv', async (col) => {
+      await prisma.electricityLoadRef.create({
+        data: {
+          subdivision: col[2],
+          area: col[4],
+          current_load: parseFloat(col[10] || '0'),
+        },
+      });
     });
-  });
 
-  // 3. Water Quality
-  await processCSV('Water_Quality_Dataset.csv', async (col) => {
-    await prisma.waterQualityRef.create({
-      data: {
-        location: col[1], // Location
-        ph: parseFloat(col[2] || '0'), // pH
-        turbidity: parseFloat(col[3] || '0'), // Turbidity
-        bod: parseFloat(col[6] || '0'), // BOD
-        lead: parseFloat(col[7] || '0'), // Lead
-      },
+    // Water Quality
+    await processCSV('Water_Quality_Dataset.csv', async (col) => {
+      await prisma.waterQualityRef.create({
+        data: {
+          location: col[1],
+          ph: parseFloat(col[2] || '0'),
+          turbidity: parseFloat(col[3] || '0'),
+          bod: parseFloat(col[6] || '0'),
+          lead: parseFloat(col[7] || '0'),
+        },
+      });
     });
-  });
 
-  // 4. Food Adulteration
-  await processCSV('food_adulteration_data.csv', async (col) => {
-    await prisma.foodAdulterationRef.create({
-      data: {
-        product_name: col[1], // product_name
-        adulterant: col[4], // adulterant
-        severity: col[7], // severity
-        health_risk: col[8], // health_risk
-      },
+    // Food Adulteration
+    await processCSV('food_adulteration_data.csv', async (col) => {
+      await prisma.foodAdulterationRef.create({
+        data: {
+          product_name: col[1],
+          adulterant: col[4],
+          severity: col[7],
+          health_risk: col[8],
+        },
+      });
     });
-  });
 
-  // 5. Agmarknet
-  await processCSV('agmarknet_sampled_100_per_state.csv', async (col) => {
-    await prisma.agmarkPriceRef.create({
-      data: {
-        commodity: col[4], // Commodity
-        grade: col[6], // Grade
-        modal_price: parseFloat(col[9] || '0'), // Modal Price
-        state: col[11], // State
-      },
+    // Agmarknet
+    await processCSV('agmarknet_sampled_100_per_state.csv', async (col) => {
+      await prisma.agmarkPriceRef.create({
+        data: {
+          commodity: col[4],
+          grade: col[6],
+          modal_price: parseFloat(col[9] || '0'),
+          state: col[11],
+        },
+      });
     });
-  });
 
-  console.log('Kaggle Data Seeding Complete!');
+    console.log('Kaggle Data Seeding Complete!');
+
+  } catch (error) {
+    console.error('Fatal Error during seeding:', error);
+    process.exit(1);
+  } finally {
+    await prisma.$disconnect();
+  }
 }
 
-main()
-  .catch((e) => { console.error(e); process.exit(1); })
-  .finally(async () => { await prisma.$disconnect(); });
+// Single execution point
+main();

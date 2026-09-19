@@ -26,8 +26,8 @@ export class FeasibilityService {
   // 3. Water Check: Verifies historical BOD is within safe limits for processing units (< 5.0)
   async verifyWaterSuitability(location: string): Promise<boolean> {
     const waterData = await this.prisma.waterQualityRef.findFirst({
-      where: { location },
-      orderBy: { id: 'desc' } // Gets most recent reading
+      where: { location }
+      // Removed orderBy: { id: 'desc' }
     });
     if (!waterData) return true; // Pass if no data
     return waterData.ph >= 6.5 && waterData.ph <= 8.5 && waterData.bod < 5.0;
