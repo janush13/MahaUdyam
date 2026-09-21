@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MahaUdyam One - Admin Configuration &amp; Governance Workspace</title>
+<!-- Tailwind CSS v3 with forms & container-queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            govNavy: '#0f2b5c',
+            govNavyDark: '#0a1d3f',
+            govNavyLight: '#1e3d75',
+            govBlueLight: '#f0f6ff',
+            govBorder: '#e2e8f0',
+            govTextPrimary: '#1e293b',
+            govTextSecondary: '#64748b',
+            govTextMuted: '#94a3b8',
+            govBadgeGreen: '#059669',
+            govBadgeGreenBg: '#ecfdf5',
+            govBadgeAmber: '#d97706',
+            govBadgeAmberBg: '#fffbeb',
+            govBadgeRed: '#dc2626',
+            govBadgeRedBg: '#fef2f2',
+            govBadgeBlue: '#2563eb',
+            govBadgeBlueBg: '#eff6ff',
+          },
+          fontFamily: {
+            sans: ['Segoe UI', 'Roboto', 'Arial', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-scrollbars">
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+<style data-purpose="table-layout">
+    .dense-table th {
+      letter-spacing: 0.025em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="bg-[#f8fafc] text-govTextPrimary font-sans antialiased text-[13px] leading-tight">
+<!-- BEGIN: MainHeader -->
+<header class="bg-white border-b border-govBorder sticky top-0 z-50 shadow-sm" data-purpose="gov-masthead">
+<!-- Top Tricolor/Statutory Bar -->
+<div class="h-1 bg-gradient-to-r from-[#ff9933] via-white to-[#138808] border-b border-slate-200"></div>
+<div class="max-w-[1440px] mx-auto px-4 py-2 flex items-center justify-between">
+<!-- Left: Emblems & Department Title -->
+<div class="flex items-center gap-3">
+<!-- Maharashtra Seal Placeholder Icon -->
+<div class="w-11 h-11 rounded-full border border-amber-600 bg-amber-50 flex items-center justify-center p-1 text-center shrink-0 shadow-sm">
+<svg class="w-8 h-8 text-amber-800" fill="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" fill="none" r="10" stroke="currentColor" stroke-width="1.5"></circle>
+<path d="M12 4v16m-8-8h16M7 7l10 10M17 7L7 17" stroke="currentColor" stroke-width="0.75"></path>
+<circle cx="12" cy="12" fill="currentColor" opacity="0.4" r="4"></circle>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-[10.5px] font-bold text-govNavy tracking-wider uppercase">Government of Maharashtra</span>
+<span class="text-[10px] text-slate-400">|</span>
+<span class="text-[11px] font-medium text-slate-600">महाराष्ट्र शासन</span>
+</div>
+<div class="flex items-center gap-2 mt-0.5">
+<h1 class="text-base font-bold text-govNavy tracking-tight">MahaUdyam One</h1>
+<span class="bg-slate-800 text-amber-300 text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded border border-slate-700">ADMIN CONSOLE</span>
+</div>
+<p class="text-[10.5px] text-govTextSecondary hidden md:block leading-none mt-0.5">
+            Single Window for a Progressive Maharashtra • System Administration &amp; Statutory Rule Engine
+          </p>
+</div>
+</div>
+<!-- Right: Search, Notifications, Language & User Profile -->
+<div class="flex items-center gap-4">
+<!-- Global Search -->
+<div class="relative w-72 hidden lg:block">
+<input class="w-full text-xs pl-8 pr-3 py-1.5 rounded border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-govNavy focus:border-govNavy placeholder-slate-400" placeholder="Search users, roles, approval rules, workflows..." type="text"/>
+<svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="7" stroke-width="2"></circle>
+<line stroke-width="2" x1="16" x2="21" y1="16" y2="21"></line>
+</svg>
+</div>
+<!-- Notification Bell -->
+<button class="relative p-1.5 text-slate-600 hover:text-govNavy hover:bg-slate-100 rounded" title="Statutory Alerts">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<span class="absolute top-0.5 right-0.5 w-4 h-4 text-[9px] font-bold bg-govBadgeRed text-white rounded-full flex items-center justify-center border border-white">3</span>
+</button>
+<!-- Language Toggle -->
+<div class="flex items-center border border-slate-300 rounded text-xs overflow-hidden bg-slate-50">
+<button class="px-2 py-1 text-slate-700 hover:bg-white transition-colors">मराठी</button>
+<span class="text-slate-300">|</span>
+<button class="px-2 py-1 font-bold text-govNavy bg-white border-l border-r border-slate-200 shadow-inner">English</button>
+</div>
+<!-- User Profile Badge -->
+<div class="flex items-center gap-2 pl-2 border-l border-slate-200">
+<div class="relative">
+<div class="w-8 h-8 rounded-full bg-govNavy text-white font-semibold text-xs flex items-center justify-center border border-govNavyDark shadow-sm">
+              AU
+            </div>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white"></span>
+</div>
+<div class="text-left hidden sm:block">
+<div class="font-semibold text-xs text-govNavy flex items-center gap-1">
+              Admin User
+              <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="text-[10px] text-govTextSecondary">System Administrator (Govt. of Maharashtra)</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: ApplicationLayout -->
+<div class="max-w-[1440px] mx-auto flex min-h-[calc(100vh-62px)]">
+<!-- BEGIN: AdminSidebar -->
+<aside class="w-[230px] bg-white border-r border-govBorder flex-shrink-0 flex flex-col justify-between" data-purpose="admin-navigation">
+<div class="p-3 space-y-4">
+<!-- Sidebar Category Header -->
+<div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-2">
+          Administration Modules
+        </div>
+<!-- Navigation Links (Matching Collage Reference) -->
+<nav class="space-y-1">
+<!-- 1. Dashboard -->
+<a class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-700 hover:bg-slate-100 hover:text-govNavy font-medium" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Dashboard</span>
+</a>
+<!-- 2. Users -->
+<a class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-700 hover:bg-slate-100 hover:text-govNavy font-medium" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Users</span>
+</a>
+<!-- 3. Roles & Permissions -->
+<a class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-700 hover:bg-slate-100 hover:text-govNavy font-medium" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Roles &amp; Permissions</span>
+</a>
+<!-- 4. Approval Rules (Active State) -->
+<a class="flex items-center justify-between px-3 py-2 rounded bg-govNavy text-white font-medium shadow-sm" href="#">
+<div class="flex items-center gap-2.5">
+<svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Approval Rules</span>
+</div>
+<span class="text-[10px] bg-amber-400/20 text-amber-300 font-mono px-1.5 py-0.2 rounded border border-amber-400/40">v2.4</span>
+</a>
+<!-- 5. Workflow Configuration -->
+<a class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-700 hover:bg-slate-100 hover:text-govNavy font-medium" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Workflow Configuration</span>
+</a>
+<!-- 6. Regulatory Content -->
+<a class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-700 hover:bg-slate-100 hover:text-govNavy font-medium" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Regulatory Content</span>
+</a>
+<!-- 7. Master Data -->
+<a class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-700 hover:bg-slate-100 hover:text-govNavy font-medium" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Master Data</span>
+</a>
+<!-- 8. Audit Logs -->
+<a class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-700 hover:bg-slate-100 hover:text-govNavy font-medium" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Audit Logs</span>
+</a>
+</nav>
+</div>
+<!-- Statutory Disclaimer Box in Sidebar -->
+<div class="p-3 m-2 bg-amber-50/80 border border-amber-200 rounded text-[11px] text-amber-900 leading-normal" data-purpose="statutory-notice">
+<div class="flex items-center gap-1.5 font-bold text-[10.5px] uppercase tracking-wide text-amber-950 mb-1">
+<svg class="w-3.5 h-3.5 text-amber-700 shrink-0" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" fill-rule="evenodd"></path>
+</svg>
+          Governance Notice
+        </div>
+<p class="text-[10px] text-amber-800/90 leading-tight">
+          System Admin credentials permit rule &amp; workflow definition. In accordance with <strong>Maharashtra RTS Act 2015</strong>, Admins hold <em>NO quasi-judicial approval</em> authority over applications.
+        </p>
+</div>
+</aside>
+<!-- END: AdminSidebar -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 overflow-y-auto px-6 py-5 bg-[#f8fafc]" data-purpose="main-workspace">
+<!-- Top Breadcrumb & Page Info -->
+<div class="mb-4">
+<div class="flex items-center gap-2 text-[11px] text-slate-500 mb-1">
+<span>Portal</span>
+<span>&gt;</span>
+<span>Administration</span>
+<span>&gt;</span>
+<span class="font-medium text-govNavy">System Configuration &amp; Rule Engine</span>
+</div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-govBorder pb-3">
+<div>
+<h2 class="text-xl font-bold text-govNavy tracking-tight">Admin Configuration &amp; Statutory Rule Engine</h2>
+<p class="text-xs text-govTextSecondary mt-0.5">
+              Manage portal administrators, RBAC permissions matrix, smart approval discovery logic, and multi-department workflow routing.
+            </p>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded hover:bg-slate-50 shadow-sm flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+              Export Schema
+            </button>
+<button class="px-3 py-1.5 text-xs font-semibold text-white bg-govNavy rounded hover:bg-govNavyLight shadow-sm flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+              New Statutory Rule
+            </button>
+</div>
+</div>
+</div>
+<!-- Top Tab Navigation Bar (Reflecting All 5 Admin States) -->
+<div class="border-b border-govBorder mb-5">
+<nav aria-label="Tabs" class="flex space-x-6 text-xs font-medium">
+<button class="text-slate-600 hover:text-govNavy pb-2.5 border-b-2 border-transparent transition-colors">
+            1. Users &amp; RBAC
+          </button>
+<button class="text-slate-600 hover:text-govNavy pb-2.5 border-b-2 border-transparent transition-colors flex items-center gap-1.5">
+<span>2. Roles &amp; Permissions Matrix</span>
+<span class="bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.2 rounded-full font-mono">6 Roles</span>
+</button>
+<button class="text-govNavy font-bold pb-2.5 border-b-2 border-govNavy flex items-center gap-1.5">
+<span>3. Approval Rules Engine</span>
+<span class="bg-govNavy text-white text-[10px] px-1.5 py-0.2 rounded-full font-mono">Active</span>
+</button>
+<button class="text-slate-600 hover:text-govNavy pb-2.5 border-b-2 border-transparent transition-colors">
+            4. Workflow Configuration
+          </button>
+<button class="text-slate-600 hover:text-govNavy pb-2.5 border-b-2 border-transparent transition-colors">
+            5. Master Data &amp; Regulatory
+          </button>
+</nav>
+</div>
+<!-- BEGIN: Section1_ApprovalRules -->
+<section class="bg-white border border-govBorder rounded-md shadow-sm mb-6 overflow-hidden" data-purpose="rule-engine-builder">
+<!-- Rule Metadata Header Bar -->
+<div class="bg-slate-50 border-b border-govBorder px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+<h3 class="font-bold text-sm text-govNavy">Rule #RUL-2024-IND-018: Red Category Industrial Manufacturing Clearance Matrix</h3>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[11px] font-mono bg-slate-200 text-slate-800 px-2 py-0.5 rounded font-semibold">Version: v2.4 (Active)</span>
+<span class="text-[11px] bg-govBadgeGreenBg text-govBadgeGreen border border-emerald-300 font-semibold px-2 py-0.5 rounded">Status: Active</span>
+<div class="h-3 w-px bg-slate-300 mx-1"></div>
+<button class="text-xs px-2.5 py-1 text-slate-700 bg-white border border-slate-300 rounded hover:bg-slate-50 font-medium">Save Draft</button>
+<button class="text-xs px-2.5 py-1 text-slate-700 bg-white border border-slate-300 rounded hover:bg-slate-50 font-medium">Validate Syntax</button>
+<button class="text-xs px-2.5 py-1 text-white bg-govNavy rounded hover:bg-govNavyLight font-medium">Publish New Version</button>
+</div>
+</div>
+<div class="p-4 space-y-4">
+<!-- Metadata Attributes Bar -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-50/70 p-2.5 rounded border border-slate-200 text-xs">
+<div>
+<span class="text-govTextSecondary block text-[10.5px]">Effective Date:</span>
+<span class="font-semibold text-govNavy">01 Jan 2024</span>
+</div>
+<div>
+<span class="text-govTextSecondary block text-[10.5px]">Last Modified:</span>
+<span class="font-semibold text-slate-800">12 Dec 2024, 04:30 PM</span>
+</div>
+<div>
+<span class="text-govTextSecondary block text-[10.5px]">Author / Approver:</span>
+<span class="font-semibold text-slate-800">Admin User (Emp ID: MH-9021)</span>
+</div>
+<div>
+<span class="text-govTextSecondary block text-[10.5px]">Target Sector:</span>
+<span class="font-semibold text-slate-800">Manufacturing (Red / Orange Category)</span>
+</div>
+</div>
+<!-- IF Container (Trigger Condition Attributes) -->
+<div class="border border-blue-200 bg-blue-50/30 rounded p-3">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="bg-govNavy text-white font-bold text-[10px] px-2 py-0.5 rounded tracking-wide uppercase">IF</span>
+<span class="font-semibold text-xs text-govNavy">Applicant Enterprise &amp; Project Profile matches ALL of the following:</span>
+</div>
+<span class="text-[11px] text-blue-700 font-medium">Auto-Discovery Clause Evaluation</span>
+</div>
+<!-- Attribute Condition Matrix -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-white p-3 rounded border border-blue-100">
+<!-- Field 1 -->
+<div>
+<label class="block text-[10.5px] font-semibold text-slate-600 mb-1">Industry Sector</label>
+<input class="w-full text-xs bg-slate-50 border border-slate-300 rounded px-2.5 py-1 font-medium text-slate-800" readonly="" type="text" value="Manufacturing (Auto &amp; Heavy Engineering)"/>
+</div>
+<!-- Field 2 -->
+<div>
+<label class="block text-[10.5px] font-semibold text-slate-600 mb-1">Project Classification &amp; Type</label>
+<input class="w-full text-xs bg-slate-50 border border-slate-300 rounded px-2.5 py-1 font-medium text-slate-800" readonly="" type="text" value="New Industrial Unit | Expansion Unit"/>
+</div>
+<!-- Field 3 -->
+<div>
+<label class="block text-[10.5px] font-semibold text-slate-600 mb-1">Project Regulatory Stage</label>
+<input class="w-full text-xs bg-slate-50 border border-slate-300 rounded px-2.5 py-1 font-medium text-slate-800" readonly="" type="text" value="Pre-Establishment &amp; Construction"/>
+</div>
+<!-- Field 4 -->
+<div>
+<label class="block text-[10.5px] font-semibold text-slate-600 mb-1">Proposed Location / Jurisdiction</label>
+<input class="w-full text-xs bg-slate-50 border border-slate-300 rounded px-2.5 py-1 font-medium text-slate-800" readonly="" type="text" value="MIDC Notified Industrial Area (Pune / Raigad / Chakan)"/>
+</div>
+<!-- Field 5 -->
+<div>
+<label class="block text-[10.5px] font-semibold text-slate-600 mb-1">Gross Plant &amp; Machinery Investment</label>
+<input class="w-full text-xs bg-slate-50 border border-slate-300 rounded px-2.5 py-1 font-medium text-slate-800" readonly="" type="text" value="₹ 10.00 Cr to ₹ 50.00 Cr (Medium Enterprise)"/>
+</div>
+<!-- Field 6 -->
+<div>
+<label class="block text-[10.5px] font-semibold text-slate-600 mb-1">Hazardous / Pollution Siting Category</label>
+<input class="w-full text-xs bg-red-50 border border-red-300 text-red-900 rounded px-2.5 py-1 font-bold" readonly="" type="text" value="Red Category (Severely Polluting - MPCB/CPCB)"/>
+</div>
+</div>
+<!-- Additional Micro-Conditions Tag Pills -->
+<div class="mt-2.5 pt-2 border-t border-blue-100/80 flex flex-wrap items-center gap-2">
+<span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Trigger Modifiers:</span>
+<span class="inline-flex items-center text-[10.5px] bg-white border border-slate-300 px-2 py-0.5 rounded text-slate-700">
+<span class="font-bold text-govNavy mr-1">AND</span> Boiler Capacity &gt; 10 TPH
+              </span>
+<span class="inline-flex items-center text-[10.5px] bg-white border border-slate-300 px-2 py-0.5 rounded text-slate-700">
+<span class="font-bold text-govNavy mr-1">AND</span> Connected Load &gt; 100 KVA (HT Power Line)
+              </span>
+<span class="inline-flex items-center text-[10.5px] bg-white border border-slate-300 px-2 py-0.5 rounded text-slate-700">
+<span class="font-bold text-govNavy mr-1">AND</span> Factory Plot Built-up Area &gt; 10,000 sq.meters
+              </span>
+</div>
+</div>
+<!-- Divider Connector Icon -->
+<div class="flex items-center justify-center my-1">
+<div class="h-px bg-slate-300 flex-1"></div>
+<div class="px-3 py-0.5 bg-govNavy text-white text-[10px] font-bold rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>THEN GENERATE MANDATORY STATUTORY APPROVAL STACK</span>
+</div>
+<div class="h-px bg-slate-300 flex-1"></div>
+</div>
+<!-- THEN Table (Resulting Approvals in Single Window) -->
+<div class="border border-govBorder rounded overflow-hidden">
+<div class="bg-slate-100 px-3 py-2 border-b border-govBorder flex items-center justify-between">
+<span class="font-bold text-xs text-govNavy">Resulting Statutory Permissions Checklist Generated in Single Application Docket</span>
+<span class="text-[11px] text-slate-500">5 clearances triggered under Maharashtra RTS Act</span>
+</div>
+<table class="w-full text-left dense-table" data-purpose="rules-result-table">
+<thead class="bg-slate-50 text-[11px] text-slate-600 border-b border-govBorder">
+<tr>
+<th class="py-2 px-3">Service Code</th>
+<th class="py-2 px-3">Clearance / Approval Name</th>
+<th class="py-2 px-3">Competent Department</th>
+<th class="py-2 px-3">Applicability</th>
+<th class="py-2 px-3">Statutory SLA</th>
+<th class="py-2 px-3">Dependency / Sequence</th>
+<th class="py-2 px-3 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-govBorder text-xs">
+<tr class="hover:bg-slate-50/80">
+<td class="py-2 px-3 font-mono font-semibold text-slate-700">CTE-01</td>
+<td class="py-2 px-3 font-medium text-govNavy">Consent to Establish (CTE) under Water &amp; Air Acts</td>
+<td class="py-2 px-3">Environment Dept (MPCB)</td>
+<td class="py-2 px-3">
+<span class="bg-red-50 text-red-700 border border-red-200 px-1.5 py-0.5 rounded font-bold text-[10px]">Mandatory</span>
+</td>
+<td class="py-2 px-3 font-semibold text-slate-800">30 Days</td>
+<td class="py-2 px-3 text-slate-600 text-[11px]">Gatekeeper Clearance; Pre-requisite for Construction</td>
+<td class="py-2 px-3 text-right">
+<button class="text-govNavy font-semibold hover:underline text-[11px]">Configure Logic</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/80">
+<td class="py-2 px-3 font-mono font-semibold text-slate-700">FL-06</td>
+<td class="py-2 px-3 font-medium text-govNavy">Factory Plan Sanction &amp; Factory Licence Registration</td>
+<td class="py-2 px-3">Labour Dept (DISH)</td>
+<td class="py-2 px-3">
+<span class="bg-red-50 text-red-700 border border-red-200 px-1.5 py-0.5 rounded font-bold text-[10px]">Mandatory</span>
+</td>
+<td class="py-2 px-3 font-semibold text-slate-800">45 Days</td>
+<td class="py-2 px-3 text-slate-600 text-[11px]">Concurrent with Building Plan; requires CTE reference</td>
+<td class="py-2 px-3 text-right">
+<button class="text-govNavy font-semibold hover:underline text-[11px]">Configure Logic</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/80">
+<td class="py-2 px-3 font-mono font-semibold text-slate-700">NOC-04</td>
+<td class="py-2 px-3 font-medium text-govNavy">Provisional Fire Safety NOC for Hazardous Occupancy</td>
+<td class="py-2 px-3">Fire Services (MIDC Fire Dept)</td>
+<td class="py-2 px-3">
+<span class="bg-red-50 text-red-700 border border-red-200 px-1.5 py-0.5 rounded font-bold text-[10px]">Mandatory</span>
+</td>
+<td class="py-2 px-3 font-semibold text-slate-800">30 Days</td>
+<td class="py-2 px-3 text-slate-600 text-[11px]">Pre-requisite for Building Plan sanction</td>
+<td class="py-2 px-3 text-right">
+<button class="text-govNavy font-semibold hover:underline text-[11px]">Configure Logic</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/80">
+<td class="py-2 px-3 font-mono font-semibold text-slate-700">HT-09</td>
+<td class="py-2 px-3 font-medium text-govNavy">High Tension (33kV) Industrial Power Connection Feasibility</td>
+<td class="py-2 px-3">Energy Dept (MSEDCL)</td>
+<td class="py-2 px-3">
+<span class="bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded font-bold text-[10px]">Conditional</span>
+</td>
+<td class="py-2 px-3 font-semibold text-slate-800">30 Days</td>
+<td class="py-2 px-3 text-slate-600 text-[11px]">Active if Contract Demand &gt; 100 KVA</td>
+<td class="py-2 px-3 text-right">
+<button class="text-govNavy font-semibold hover:underline text-[11px]">Configure Logic</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/80">
+<td class="py-2 px-3 font-mono font-semibold text-slate-700">BP-11</td>
+<td class="py-2 px-3 font-medium text-govNavy">Industrial Building Plan &amp; Structural Clearance</td>
+<td class="py-2 px-3">Urban Development (MIDC SPA)</td>
+<td class="py-2 px-3">
+<span class="bg-red-50 text-red-700 border border-red-200 px-1.5 py-0.5 rounded font-bold text-[10px]">Mandatory</span>
+</td>
+<td class="py-2 px-3 font-semibold text-slate-800">60 Days</td>
+<td class="py-2 px-3 text-slate-600 text-[11px]">Depends on Provisional Fire NOC clearance</td>
+<td class="py-2 px-3 text-right">
+<button class="text-govNavy font-semibold hover:underline text-[11px]">Configure Logic</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- END: Section1_ApprovalRules -->
+<!-- BEGIN: Section2_RolesPermissionsMatrix -->
+<section class="bg-white border border-govBorder rounded-md shadow-sm mb-6" data-purpose="roles-matrix-panel">
+<!-- Card Header (Panel 12 from collage reference) -->
+<div class="px-4 py-3 border-b border-govBorder flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-bold text-sm text-govNavy">Role-Based Access Control (RBAC) &amp; Governance Matrix</h3>
+<span class="bg-slate-100 text-slate-600 text-[10px] font-semibold px-2 py-0.5 rounded border border-slate-200">Panel Reference 12</span>
+</div>
+<p class="text-xs text-govTextSecondary mt-0.5">
+              Strict statutory separation of administrative maintenance vs. quasi-judicial regulatory review.
+            </p>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded hover:bg-slate-50">+ Add User</button>
+<button class="px-2.5 py-1 text-xs font-semibold text-white bg-govNavy rounded hover:bg-govNavyLight flex items-center gap-1">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>+ Create Role</span>
+</button>
+</div>
+</div>
+<!-- Table: Roles & Permissions Matrix -->
+<div class="overflow-x-auto">
+<table class="w-full text-left dense-table" data-purpose="rbac-table">
+<thead class="bg-slate-50 text-[11px] text-slate-600 border-b border-govBorder">
+<tr>
+<th class="py-2.5 px-3">Role Name</th>
+<th class="py-2.5 px-3">Role Description</th>
+<th class="py-2.5 px-3 text-center">Users</th>
+<th class="py-2.5 px-3 text-center" title="View Applications">View</th>
+<th class="py-2.5 px-3 text-center" title="Create Drafts / Logs">Create</th>
+<th class="py-2.5 px-3 text-center" title="Verify Checklist">Verify</th>
+<th class="py-2.5 px-3 text-center" title="Submit Recommendation">Recommend</th>
+<th class="py-2.5 px-3 text-center" title="Quasi-Judicial Approval Grant">Statutory Grant</th>
+<th class="py-2.5 px-3 text-center" title="Configure Rules/Engine">Config Engine</th>
+<th class="py-2.5 px-3">Status</th>
+<th class="py-2.5 px-3 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-govBorder text-xs">
+<!-- Row 1: System Administrator -->
+<tr class="hover:bg-slate-50/70">
+<td class="py-2 px-3 font-semibold text-govNavy">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-blue-500"></span>
+<span>System Administrator</span>
+</div>
+</td>
+<td class="py-2 px-3 text-slate-600 max-w-xs truncate text-[11px]">System configuration, RBAC, master data &amp; rule authoring</td>
+<td class="py-2 px-3 text-center font-mono font-bold">2</td>
+<td class="py-2 px-3 text-center text-emerald-600 font-bold">✓</td>
+<td class="py-2 px-3 text-center text-emerald-600 font-bold">✓</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3 text-center">
+<span class="text-[10px] text-red-600 bg-red-50 border border-red-200 px-1 py-0.2 rounded font-bold">NO (Restricted)</span>
+</td>
+<td class="py-2 px-3 text-center text-emerald-600 font-bold">✓</td>
+<td class="py-2 px-3">
+<span class="text-[10.5px] font-semibold text-govBadgeGreen bg-govBadgeGreenBg border border-emerald-200 px-1.5 py-0.5 rounded">Active</span>
+</td>
+<td class="py-2 px-3 text-right">
+<button class="text-govNavy hover:underline font-medium text-[11px]">View</button>
+</td>
+</tr>
+<!-- Row 2: Department Officer -->
+<tr class="hover:bg-slate-50/70">
+<td class="py-2 px-3 font-semibold text-govNavy">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-slate-400"></span>
+<span>Department Officer</span>
+</div>
+</td>
+<td class="py-2 px-3 text-slate-600 max-w-xs truncate text-[11px]">Process and scrutinise applications &amp; coordinate NOCs</td>
+<td class="py-2 px-3 text-center font-mono font-bold">24</td>
+<td class="py-2 px-3 text-center text-emerald-600 font-bold">✓</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3 text-center text-emerald-600 font-bold">✓</td>
+<td class="py-2 px-3 text-center text-emerald-600 font-bold">✓</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3">
+<span class="text-[10.5px] font-semibold text-govBadgeGreen bg-govBadgeGreenBg border border-emerald-200 px-1.5 py-0.5 rounded">Active</span>
+</td>
+<td class="py-2 px-3 text-right">
+<button class="text-govNavy hover:underline font-medium text-[11px]">View</button>
+</td>
+</tr>
+<!-- Row 3: Inspector -->
+<tr class="hover:bg-slate-50/70">
+<td class="py-2 px-3 font-semibold text-govNavy">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-slate-400"></span>
+<span>Inspector</span>
+</div>
+</td>
+<td class="py-2 px-3 text-slate-600 max-w-xs truncate text-[11px]">Conduct inspections and submit field verification reports</td>
+<td class="py-2 px-3 text-center font-mono font-bold">18</td>
+<td class="py-2 px-3 text-center text-emerald-600 font-bold">✓</td>
+<td class="py-2 px-3 text-center text-emerald-600 font-bold">✓</td>
+<td class="py-2 px-3 text-center text-emerald-600 font-bold">✓</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3">
+<span class="text-[10.5px] font-semibold text-govBadgeGreen bg-govBadgeGreenBg border border-emerald-200 px-1.5 py-0.5 rounded">Active</span>
+</td>
+<td class="py-2 px-3 text-right">
+<button class="text-govNavy hover:underline font-medium text-[11px]">View</button>
+</td>
+</tr>
+<!-- Row 4: Statutory Approving Authority -->
+<tr class="hover:bg-slate-50/70 bg-amber-50/30">
+<td class="py-2 px-3 font-bold text-govNavy">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<span>Statutory Approving Authority</span>
+</div>
+</td>
+<td class="py-2 px-3 text-slate-600 max-w-xs truncate text-[11px]">Approve / Reject applications under Maharashtra RTS Act</td>
+<td class="py-2 px-3 text-center font-mono font-bold">6</td>
+<td class="py-2 px-3 text-center text-emerald-600 font-bold">✓</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3 text-center text-emerald-600 font-bold">✓</td>
+<td class="py-2 px-3 text-center text-emerald-600 font-bold">✓</td>
+<td class="py-2 px-3 text-center text-amber-700 font-bold bg-amber-100/50">✓ (Statutory)</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3">
+<span class="text-[10.5px] font-semibold text-govBadgeGreen bg-govBadgeGreenBg border border-emerald-200 px-1.5 py-0.5 rounded">Active</span>
+</td>
+<td class="py-2 px-3 text-right">
+<button class="text-govNavy hover:underline font-medium text-[11px]">View</button>
+</td>
+</tr>
+<!-- Row 5: Department Viewer -->
+<tr class="hover:bg-slate-50/70">
+<td class="py-2 px-3 font-semibold text-govNavy">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-slate-400"></span>
+<span>Department Viewer</span>
+</div>
+</td>
+<td class="py-2 px-3 text-slate-600 max-w-xs truncate text-[11px]">Read-only access to department data, dashboards and MIS</td>
+<td class="py-2 px-3 text-center font-mono font-bold">10</td>
+<td class="py-2 px-3 text-center text-emerald-600 font-bold">✓</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3 text-center text-slate-300">-</td>
+<td class="py-2 px-3">
+<span class="text-[10.5px] font-semibold text-govBadgeGreen bg-govBadgeGreenBg border border-emerald-200 px-1.5 py-0.5 rounded">Active</span>
+</td>
+<td class="py-2 px-3 text-right">
+<button class="text-govNavy hover:underline font-medium text-[11px]">View</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- END: Section2_RolesPermissionsMatrix -->
+<!-- BEGIN: Section3_WorkflowConfig -->
+<section class="bg-white border border-govBorder rounded-md shadow-sm mb-6 p-4" data-purpose="workflow-config-pipeline">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 pb-2 border-b border-slate-200">
+<div>
+<h3 class="font-bold text-sm text-govNavy">Statutory Workflow Orchestration Pipeline</h3>
+<p class="text-xs text-govTextSecondary mt-0.5">Sequential stage transition &amp; automated escalation rules for Factory Licence &amp; CTE workflow</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[11px] text-slate-500">Auto-Escalation Engine:</span>
+<span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">ACTIVE</span>
+</div>
+</div>
+<!-- Visual Stage Ordering Pipeline -->
+<div class="grid grid-cols-1 md:grid-cols-5 gap-3 pt-2">
+<!-- Stage 1 -->
+<div class="border border-slate-200 bg-slate-50 rounded p-2.5 relative">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[10px] font-mono font-bold text-govNavy bg-white px-1.5 py-0.2 rounded border border-slate-200">STAGE 01</span>
+<span class="text-[10px] text-slate-400">SLA: 0 Days</span>
+</div>
+<h4 class="font-bold text-xs text-govNavy mb-0.5">Filing &amp; Payment</h4>
+<div class="text-[10.5px] text-slate-600">Applicant Portal</div>
+<div class="mt-2 text-[9.5px] bg-blue-50 text-blue-800 px-1.5 py-0.5 rounded border border-blue-100 font-medium">Auto-verification &amp; GRAS Fee</div>
+</div>
+<!-- Stage 2 -->
+<div class="border border-slate-200 bg-slate-50 rounded p-2.5 relative">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[10px] font-mono font-bold text-govNavy bg-white px-1.5 py-0.2 rounded border border-slate-200">STAGE 02</span>
+<span class="text-[10px] text-slate-600 font-semibold">SLA: 5 Days</span>
+</div>
+<h4 class="font-bold text-xs text-govNavy mb-0.5">Desk Scrutiny</h4>
+<div class="text-[10.5px] text-slate-600">Scrutiny Officer (DISH)</div>
+<div class="mt-2 text-[9.5px] bg-amber-50 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200 font-medium">Query Raising Enabled</div>
+</div>
+<!-- Stage 3 -->
+<div class="border border-slate-200 bg-slate-50 rounded p-2.5 relative">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[10px] font-mono font-bold text-govNavy bg-white px-1.5 py-0.2 rounded border border-slate-200">STAGE 03</span>
+<span class="text-[10px] text-slate-600 font-semibold">SLA: 7 Days</span>
+</div>
+<h4 class="font-bold text-xs text-govNavy mb-0.5">Site Inspection</h4>
+<div class="text-[10.5px] text-slate-600">Field Inspector</div>
+<div class="mt-2 text-[9.5px] bg-emerald-50 text-emerald-800 px-1.5 py-0.5 rounded border border-emerald-200 font-medium">Geotagged Photo Upload</div>
+</div>
+<!-- Stage 4 -->
+<div class="border border-slate-200 bg-slate-50 rounded p-2.5 relative">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[10px] font-mono font-bold text-govNavy bg-white px-1.5 py-0.2 rounded border border-slate-200">STAGE 04</span>
+<span class="text-[10px] text-slate-600 font-semibold">SLA: 3 Days</span>
+</div>
+<h4 class="font-bold text-xs text-govNavy mb-0.5">Recommendation</h4>
+<div class="text-[10.5px] text-slate-600">Officer Level 1</div>
+<div class="mt-2 text-[9.5px] bg-indigo-50 text-indigo-800 px-1.5 py-0.5 rounded border border-indigo-200 font-medium">Statutory Brief Drafted</div>
+</div>
+<!-- Stage 5 -->
+<div class="border-2 border-govNavy bg-blue-50/40 rounded p-2.5 relative">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[10px] font-mono font-bold text-white bg-govNavy px-1.5 py-0.2 rounded">STAGE 05</span>
+<span class="text-[10px] text-govNavy font-bold">SLA: 5 Days</span>
+</div>
+<h4 class="font-bold text-xs text-govNavy mb-0.5">Final Grant / DSC</h4>
+<div class="text-[10.5px] text-slate-700 font-medium">Approving Authority</div>
+<div class="mt-2 text-[9.5px] bg-emerald-100 text-emerald-900 px-1.5 py-0.5 rounded border border-emerald-300 font-bold">Digital Sign &amp; Barcode</div>
+</div>
+</div>
+<!-- Workflow Engine Controls Toggles -->
+<div class="mt-4 pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+<div class="flex items-center gap-4">
+<label class="inline-flex items-center gap-1.5 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-govNavy focus:ring-govNavy" type="checkbox"/>
+<span class="font-medium text-slate-700">Parallel Scrutiny for Multi-NOC</span>
+</label>
+<label class="inline-flex items-center gap-1.5 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-govNavy focus:ring-govNavy" type="checkbox"/>
+<span class="font-medium text-slate-700">RTS Auto-Escalation on Breach</span>
+</label>
+<label class="inline-flex items-center gap-1.5 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-govNavy focus:ring-govNavy" type="checkbox"/>
+<span class="font-medium text-slate-700">Aadhaar eSign / DSC Enforced</span>
+</label>
+</div>
+<button class="text-xs font-semibold text-govNavy hover:underline">Edit Workflow Triggers →</button>
+</div>
+</section>
+<!-- END: Section3_WorkflowConfig -->
+<!-- BEGIN: Section4_AuditLogsPreview -->
+<section class="bg-white border border-govBorder rounded-md shadow-sm" data-purpose="audit-log-panel">
+<!-- Card Header (Panel 7 from collage reference) -->
+<div class="px-4 py-3 border-b border-govBorder flex items-center justify-between">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-bold text-sm text-govNavy">System Security &amp; Configuration Audit Logs</h3>
+<span class="bg-slate-100 text-slate-600 text-[10px] font-semibold px-2 py-0.5 rounded border border-slate-200">Panel Reference 7</span>
+</div>
+<p class="text-xs text-govTextSecondary mt-0.5">Immutable audit trail of administrative modifications to rules, master tables, and user permissions</p>
+</div>
+<button class="px-2.5 py-1 text-xs font-semibold text-govNavy bg-govBlueLight border border-blue-200 rounded hover:bg-blue-100 flex items-center gap-1">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            Export CSV
+          </button>
+</div>
+<table class="w-full text-left dense-table" data-purpose="audit-table">
+<thead class="bg-slate-50 text-[11px] text-slate-600 border-b border-govBorder">
+<tr>
+<th class="py-2 px-3">Timestamp</th>
+<th class="py-2 px-3">Admin / User</th>
+<th class="py-2 px-3">Action</th>
+<th class="py-2 px-3">Entity Modified</th>
+<th class="py-2 px-3">Reference ID</th>
+<th class="py-2 px-3">IP Address</th>
+<th class="py-2 px-3 text-right">Result</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-govBorder text-xs">
+<tr class="hover:bg-slate-50/70">
+<td class="py-2 px-3 text-slate-500 font-mono text-[11px]">12 Dec 2024, 04:30 PM</td>
+<td class="py-2 px-3 font-semibold text-slate-800">Admin User</td>
+<td class="py-2 px-3">
+<span class="bg-blue-50 text-blue-700 font-semibold px-1.5 py-0.2 rounded text-[10.5px]">Rule Updated</span>
+</td>
+<td class="py-2 px-3 text-slate-600">Approval Engine Siting Criteria</td>
+<td class="py-2 px-3 font-mono text-[11px]">RUL-2024-IND-018</td>
+<td class="py-2 px-3 text-slate-400 font-mono text-[11px]">10.142.6.84</td>
+<td class="py-2 px-3 text-right">
+<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">Success</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="py-2 px-3 text-slate-500 font-mono text-[11px]">12 Dec 2024, 10:24 AM</td>
+<td class="py-2 px-3 font-semibold text-slate-800">Rohit Patil (Scrutiny Off.)</td>
+<td class="py-2 px-3">
+<span class="bg-slate-100 text-slate-700 font-semibold px-1.5 py-0.2 rounded text-[10.5px]">Query Raised</span>
+</td>
+<td class="py-2 px-3 text-slate-600">Site Plan Drawing Checklist</td>
+<td class="py-2 px-3 font-mono text-[11px]">MUO/2024/000123</td>
+<td class="py-2 px-3 text-slate-400 font-mono text-[11px]">10.142.12.19</td>
+<td class="py-2 px-3 text-right">
+<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">Success</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="py-2 px-3 text-slate-500 font-mono text-[11px]">11 Dec 2024, 02:15 PM</td>
+<td class="py-2 px-3 font-semibold text-slate-800">Meera Joshi</td>
+<td class="py-2 px-3">
+<span class="bg-amber-50 text-amber-800 font-semibold px-1.5 py-0.2 rounded text-[10.5px]">Master Data Edit</span>
+</td>
+<td class="py-2 px-3 text-slate-600">MIDC Industrial Areas (Talegaon Phase II)</td>
+<td class="py-2 px-3 font-mono text-[11px]">MD-DIST-004</td>
+<td class="py-2 px-3 text-slate-400 font-mono text-[11px]">10.142.6.90</td>
+<td class="py-2 px-3 text-right">
+<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">Success</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="py-2 px-3 text-slate-500 font-mono text-[11px]">09 Dec 2024, 11:05 AM</td>
+<td class="py-2 px-3 font-semibold text-slate-800">Pravin Shinde</td>
+<td class="py-2 px-3">
+<span class="bg-purple-50 text-purple-700 font-semibold px-1.5 py-0.2 rounded text-[10.5px]">Policy Upload</span>
+</td>
+<td class="py-2 px-3 text-slate-600">GR No. IND-2024-44/P.K.12 (Industrial Policy)</td>
+<td class="py-2 px-3 font-mono text-[11px]">REG-DOC-2024-88</td>
+<td class="py-2 px-3 text-slate-400 font-mono text-[11px]">10.142.5.12</td>
+<td class="py-2 px-3 text-right">
+<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">Success</span>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="px-4 py-2 bg-slate-50 border-t border-govBorder flex items-center justify-between text-xs text-slate-500">
+<span>Showing 4 of 2,890 log entries</span>
+<div class="flex items-center gap-1">
+<button class="px-2 py-0.5 border border-slate-300 rounded bg-white hover:bg-slate-100 disabled:opacity-50" disabled="">&lt; Prev</button>
+<span class="px-2 py-0.5 font-bold text-govNavy">1</span>
+<button class="px-2 py-0.5 border border-slate-300 rounded bg-white hover:bg-slate-100">2</button>
+<button class="px-2 py-0.5 border border-slate-300 rounded bg-white hover:bg-slate-100">Next &gt;</button>
+</div>
+</div>
+</section>
+<!-- END: Section4_AuditLogsPreview -->
+</main>
+<!-- END: MainContent -->
+</div>
+<!-- END: ApplicationLayout -->
+<!-- BEGIN: MainFooter -->
+<footer class="bg-slate-900 text-slate-300 border-t-2 border-amber-500 mt-6" data-purpose="statutory-footer">
+<div class="max-w-[1440px] mx-auto px-6 py-6 grid grid-cols-1 md:grid-cols-4 gap-6 text-xs">
+<!-- Column 1 -->
+<div>
+<div class="font-bold text-white uppercase tracking-wider text-xs mb-2">Directorate of Industries</div>
+<p class="text-slate-400 text-[11px] leading-relaxed">
+          Government of Maharashtra<br/>
+          New Administrative Building, 2nd Floor, Madam Cama Road, Opposite Mantralaya, Mumbai - 400 032.
+        </p>
+<p class="text-[11px] text-slate-400 mt-2">
+          Helpdesk: 1800-120-8040 (Toll Free)<br/>
+          Support: <a class="text-amber-400 hover:underline" href="#">admin-support.mahait@gov.in</a>
+</p>
+</div>
+<!-- Column 2 -->
+<div>
+<div class="font-bold text-white uppercase tracking-wider text-xs mb-2">Statutory Compliance</div>
+<ul class="space-y-1 text-slate-400 text-[11px]">
+<li>• <a class="hover:text-white" href="#">Maharashtra RTS Act 2015 Guidelines</a></li>
+<li>• <a class="hover:text-white" href="#">Deemed Approval Notified Time Limits</a></li>
+<li>• <a class="hover:text-white" href="#">State Industrial Policy 2019-2024</a></li>
+<li>• <a class="hover:text-white" href="#">Statutory Grievance Redressal SOP</a></li>
+<li>• <a class="hover:text-white" href="#">Third-Party Joint Inspection Norms</a></li>
+</ul>
+</div>
+<!-- Column 3 -->
+<div>
+<div class="font-bold text-white uppercase tracking-wider text-xs mb-2">Standards &amp; Security</div>
+<ul class="space-y-1 text-slate-400 text-[11px]">
+<li>• Certified Compliant with GIGW 3.0</li>
+<li>• W3C WCAG 2.1 Level AA Accessible</li>
+<li>• ISO 27001:2022 Certified Architecture</li>
+<li>• CERT-In Audited Single Window Portal</li>
+<li>• Data Localization: MahaGov Cloud (MahaIT)</li>
+</ul>
+</div>
+<!-- Column 4 -->
+<div>
+<div class="font-bold text-white uppercase tracking-wider text-xs mb-2">Technical Administration</div>
+<p class="text-slate-400 text-[11px] leading-relaxed">
+          Designed, developed, hosted and maintained by Maharashtra Information Technology Corporation Limited (MahaIT) &amp; National Informatics Centre (NIC).
+        </p>
+<div class="mt-3 flex items-center gap-2">
+<span class="inline-block bg-slate-800 text-amber-300 font-mono text-[10px] px-2 py-0.5 rounded border border-slate-700">
+            Node: BOM-PROD-ADM-04
+          </span>
+<span class="inline-block bg-emerald-950 text-emerald-400 font-mono text-[10px] px-2 py-0.5 rounded border border-emerald-800">
+            Latency: 18ms
+          </span>
+</div>
+</div>
+</div>
+<!-- Copyright Sub-Footer -->
+<div class="border-t border-slate-800 bg-slate-950 px-6 py-2.5 text-[10.5px] text-slate-400 flex flex-col sm:flex-row items-center justify-between">
+<div>
+        © 2024 Government of Maharashtra. All rights reserved. MahaUdyam One Single Window Administration Console.
+      </div>
+<div class="flex items-center gap-4 mt-1 sm:mt-0 font-mono">
+<span>Build: v4.8.2-gov</span>
+<span>|</span>
+<span>Environment: Production STQC-Secured</span>
+</div>
+</div>
+</footer>
+<!-- END: MainFooter -->
+</body></html>

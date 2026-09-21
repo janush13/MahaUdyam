@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MahaUdyam One - Inspector Workspace: Schedule, Inspection Detail &amp; Submit Report</title>
+<!-- Tailwind CSS CDN with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            govNavy: '#0B2265',
+            govNavyDark: '#071644',
+            govBlue: '#153B8A',
+            govBlueHover: '#1B47A6',
+            govLightBg: '#F8FAFC',
+            govBorder: '#CBD5E1',
+            govMuted: '#64748B',
+            govSuccess: '#15803D',
+            govWarning: '#B45309',
+            govDanger: '#B91C1C'
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Typography and Layout Styles -->
+<style data-purpose="typography">
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #0F172A;
+      background-color: #F1F5F9;
+    }
+    .badge-scheduled {
+      background-color: #ECFDF5;
+      color: #047857;
+      border: 1px solid #A7F3D0;
+    }
+    .badge-amber {
+      background-color: #FFFBEB;
+      color: #B45309;
+      border: 1px solid #FDE68A;
+    }
+  </style>
+<style data-purpose="scrollbar-styling">
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+  </style>
+<!-- END: Custom Typography and Layout Styles -->
+</head>
+<body class="min-h-screen flex flex-col bg-slate-100 text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
+<!-- BEGIN: Institutional Portal Topbar & Header -->
+<header class="bg-govNavy text-white shadow-md z-40 border-b border-blue-950" data-purpose="portal-header">
+<!-- Top utility strip -->
+<div class="bg-govNavyDark px-4 py-1 text-xs border-b border-slate-700/60 flex flex-wrap justify-between items-center text-slate-300">
+<div class="flex items-center space-x-3">
+<span class="font-medium tracking-wide">GOVERNMENT OF MAHARASHTRA | महाराष्ट्र शासन</span>
+<span class="text-slate-500">|</span>
+<span class="text-slate-300">Directorate of Industrial Safety and Health (DISH)</span>
+</div>
+<div class="flex items-center space-x-4 text-xs">
+<span class="inline-flex items-center text-emerald-400 font-medium">
+<span class="w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1.5 animate-pulse"></span>
+          RTS Act 2015 Live Compliance: 99.4%
+        </span>
+<span class="text-slate-500">|</span>
+<span class="cursor-pointer hover:text-white transition">English</span>
+<span class="text-slate-500">|</span>
+<span class="cursor-pointer hover:text-white transition">मराठी</span>
+</div>
+</div>
+<!-- Main Navigation Bar -->
+<div class="px-6 py-3 flex items-center justify-between">
+<!-- Seal + Brand -->
+<div class="flex items-center space-x-3">
+<!-- SVG Emblem Placeholder for Maharashtra Government Emblem -->
+<div class="w-12 h-12 rounded-full bg-white p-1 flex items-center justify-center shadow-inner flex-shrink-0 border border-amber-400" title="Government of Maharashtra Official Seal">
+<svg class="w-10 h-10 text-govNavy" fill="none" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" fill="#FFFDF0" r="46" stroke="#0B2265" stroke-width="3"></circle>
+<circle cx="50" cy="50" r="38" stroke="#B45309" stroke-dasharray="3 3" stroke-width="1.5"></circle>
+<path d="M50 20 L58 35 L75 38 L62 50 L66 67 L50 58 L34 67 L38 50 L25 38 L42 35 Z" fill="#B45309" opacity="0.85"></path>
+<text fill="#0B2265" font-size="8" font-weight="bold" text-anchor="middle" x="50" y="82">महाराष्ट्र शासन</text>
+</svg>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<h1 class="text-xl font-bold tracking-tight text-white uppercase">MahaUdyam One</h1>
+<span class="bg-blue-800 text-blue-200 text-[11px] font-semibold px-2 py-0.5 rounded border border-blue-600 tracking-wider">INSPECTOR DESK</span>
+</div>
+<p class="text-xs text-slate-300 font-normal">Single Window for a Progressive Maharashtra • Statutory Field Inspection Management</p>
+</div>
+</div>
+<!-- Quick Search Bar -->
+<div class="hidden md:flex items-center w-80 lg:w-96">
+<div class="relative w-full">
+<input class="w-full text-xs pl-8 pr-3 py-1.5 rounded bg-slate-900/60 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400" placeholder="Search Inspection No., Application No., Enterprise..." type="text"/>
+<svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<!-- User Profile & Notifications -->
+<div class="flex items-center space-x-4">
+<!-- Notification Icon -->
+<button class="relative p-1.5 text-slate-300 hover:text-white rounded hover:bg-govBlue transition" title="Statutory Notifications">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-red-600 text-white text-[10px] font-bold flex items-center justify-center border-2 border-govNavy">3</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-700"></div>
+<!-- Inspector Profile -->
+<div class="flex items-center space-x-2.5">
+<div class="w-9 h-9 rounded-full bg-amber-500 text-govNavyDark font-bold flex items-center justify-center text-xs shadow border border-amber-300">
+            SK
+          </div>
+<div class="text-left text-xs leading-tight hidden sm:block">
+<div class="font-bold text-white tracking-wide">S. Kulkarni</div>
+<div class="text-slate-300 text-[10px]">Inspector (DISH / Field Unit)</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- END: Institutional Portal Topbar & Header -->
+<!-- BEGIN: Master Layout Shell -->
+<div class="flex-1 flex overflow-hidden">
+<!-- BEGIN: Left Institutional Sidebar -->
+<aside class="w-64 bg-white border-r border-slate-300 flex flex-col justify-between flex-shrink-0 hidden md:flex" data-purpose="inspector-sidebar">
+<div class="py-4">
+<!-- Section label -->
+<div class="px-5 pb-2 text-[10px] font-bold tracking-wider uppercase text-slate-500">
+          Inspector Modules
+        </div>
+<!-- Navigation Menu -->
+<nav class="space-y-1 px-3">
+<a class="flex items-center px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded group transition" href="#">
+<svg class="w-4 h-4 mr-3 text-slate-500 group-hover:text-slate-700" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Dashboard
+          </a>
+<a class="flex items-center justify-between px-3 py-2 text-xs font-semibold text-govNavy bg-blue-50 border-l-4 border-govNavy rounded-r transition" href="#">
+<div class="flex items-center">
+<svg class="w-4 h-4 mr-3 text-govNavy" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              My Inspections
+            </div>
+<span class="bg-govNavy text-white font-bold text-[10px] px-1.5 py-0.5 rounded-full">5</span>
+</a>
+<a class="flex items-center px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded group transition" href="#">
+<svg class="w-4 h-4 mr-3 text-slate-500 group-hover:text-slate-700" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Reports &amp; Archival
+          </a>
+</nav>
+<div class="mt-8 px-4">
+<div class="bg-slate-50 border border-slate-200 rounded p-3 text-[11px] text-slate-700">
+<div class="font-bold text-slate-900 flex items-center mb-1">
+<span class="w-2 h-2 rounded-full bg-blue-600 mr-1.5"></span>
+              Assigned Field Jurisdiction
+            </div>
+<p class="text-slate-600 font-medium">Pune Division • Zone 4</p>
+<p class="text-[10px] text-slate-500 mt-1">Chakan, Pimpri-Chinchwad &amp; Talegaon Industrial Clusters</p>
+</div>
+</div>
+</div>
+<!-- Statutory RTS Compliance Footer in Sidebar -->
+<div class="p-4 border-t border-slate-200 bg-slate-50">
+<div class="text-[10px] text-slate-500 space-y-1">
+<p class="font-bold text-slate-800">Maharashtra RTS Act 2015</p>
+<p>Statutory Site Inspection Deadline: <strong>Within 5 working days</strong> from scrutiny approval.</p>
+<div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-2">
+<div class="bg-emerald-600 h-full w-4/5"></div>
+</div>
+<p class="text-[9px] text-slate-400 mt-0.5">Average turnaround: 3.2 days</p>
+</div>
+</div>
+</aside>
+<!-- END: Left Institutional Sidebar -->
+<!-- BEGIN: Main Work Area -->
+<main class="flex-1 overflow-y-auto px-6 py-4 space-y-5" data-purpose="inspector-workspace-main">
+<!-- Breadcrumbs and Flow Quick-Switch Bar -->
+<div class="flex flex-col md:flex-row md:items-center justify-between pb-2 border-b border-slate-200 gap-3">
+<div>
+<div class="text-xs text-slate-500 flex items-center space-x-1.5">
+<span>Portal</span>
+<span>&gt;</span>
+<span class="text-slate-600 font-medium">My Inspections</span>
+<span>&gt;</span>
+<span class="text-govNavy font-semibold">INSP/2024/00045 (Factory Licence Inspection)</span>
+</div>
+<h2 class="text-lg font-bold text-govNavy tracking-tight mt-0.5">Inspector Statutory Workflow Cockpit</h2>
+</div>
+<!-- Flow Status Tabs -->
+<div class="inline-flex rounded-md shadow-sm border border-slate-300 bg-white p-0.5 text-xs">
+<button class="px-3 py-1 font-semibold text-slate-700 hover:text-govNavy hover:bg-slate-100 rounded">
+            1. Inspection Schedule (5)
+          </button>
+<button class="px-3 py-1 font-bold text-white bg-govNavy rounded shadow-xs">
+            2. Inspection Detail (Active)
+          </button>
+<button class="px-3 py-1 font-semibold text-slate-700 hover:text-govNavy hover:bg-slate-100 rounded">
+            3. Submit Report (In Progress)
+          </button>
+</div>
+</div>
+<!-- READ-ONLY REGULATORY COMPLIANCE BANNER -->
+<div class="bg-blue-50 border-l-4 border-govNavy p-3 rounded text-xs flex items-center justify-between shadow-xs">
+<div class="flex items-center space-x-2.5">
+<svg class="w-5 h-5 text-govNavy flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" fill-rule="evenodd"></path>
+</svg>
+<div>
+<span class="font-bold text-govNavy">Statutory Notice:</span>
+<span class="text-slate-700">Digital submission generates an immutable RTS Audit entry. Photographs must carry timestamp &amp; Geo-coordinates under DISH Circular No. 2024/G-12.</span>
+</div>
+</div>
+<span class="text-[11px] font-mono font-medium text-slate-500">ID: DISH-INSP-SYS-2024</span>
+</div>
+<!-- BEGIN: SECTION 1: INSPECTION SCHEDULE TABLE (Faithful replication of Panel 2) -->
+<section class="bg-white border border-slate-300 rounded shadow-xs overflow-hidden" data-purpose="panel-inspection-schedule">
+<div class="px-5 py-3 border-b border-slate-200 flex flex-wrap items-center justify-between bg-slate-50 gap-2">
+<div class="flex items-center space-x-4">
+<h3 class="font-bold text-sm text-slate-900 tracking-wide uppercase">My Inspections Schedule</h3>
+<!-- Schedule State Filter Tabs -->
+<div class="flex space-x-1">
+<span class="px-2.5 py-1 text-xs font-bold rounded bg-govNavy text-white">Upcoming (5)</span>
+<span class="px-2.5 py-1 text-xs font-medium rounded text-slate-600 hover:bg-slate-200 cursor-pointer">Completed (8)</span>
+<span class="px-2.5 py-1 text-xs font-medium rounded text-slate-600 hover:bg-slate-200 cursor-pointer">Rescheduled (2)</span>
+</div>
+</div>
+<div class="text-xs text-slate-500 font-medium">
+            Showing 1 - 5 of 5 Inspections
+          </div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs border-collapse">
+<thead>
+<tr class="bg-slate-100/80 border-b border-slate-200 text-slate-700 uppercase font-semibold text-[11px]">
+<th class="py-2.5 px-3">Inspection No.</th>
+<th class="py-2.5 px-3">Application No.</th>
+<th class="py-2.5 px-3">Approval Type</th>
+<th class="py-2.5 px-3">Date &amp; Time</th>
+<th class="py-2.5 px-3">Location</th>
+<th class="py-2.5 px-3">Status</th>
+<th class="py-2.5 px-3 text-center">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 text-slate-800">
+<!-- Row 1 (Target Active Row) -->
+<tr class="bg-blue-50/60 font-medium hover:bg-blue-50 transition">
+<td class="py-2.5 px-3 text-govNavy font-bold">INSP/2024/00045</td>
+<td class="py-2.5 px-3 text-slate-600">MUO/2024/00123</td>
+<td class="py-2.5 px-3">Factory Licence</td>
+<td class="py-2.5 px-3">18 Dec 2024, 11:00 AM</td>
+<td class="py-2.5 px-3">Pune (MIDC Chakan)</td>
+<td class="py-2.5 px-3">
+<span class="badge-scheduled text-[11px] font-semibold px-2 py-0.5 rounded-full inline-block">Scheduled</span>
+</td>
+<td class="py-2.5 px-3 text-center">
+<button class="bg-govNavy hover:bg-govBlue text-white font-medium px-2.5 py-1 rounded text-[11px] shadow-xs">Active Dossier</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition">
+<td class="py-2.5 px-3 text-govNavy font-bold">INSP/2024/00046</td>
+<td class="py-2.5 px-3 text-slate-600">MUO/2024/00156</td>
+<td class="py-2.5 px-3">CTE (Consent to Establish)</td>
+<td class="py-2.5 px-3">19 Dec 2024, 02:00 PM</td>
+<td class="py-2.5 px-3">Chakan Phase-I</td>
+<td class="py-2.5 px-3">
+<span class="badge-scheduled text-[11px] font-semibold px-2 py-0.5 rounded-full inline-block">Scheduled</span>
+</td>
+<td class="py-2.5 px-3 text-center">
+<button class="text-govNavy hover:underline font-semibold text-[11px]">View</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition">
+<td class="py-2.5 px-3 text-govNavy font-bold">INSP/2024/00047</td>
+<td class="py-2.5 px-3 text-slate-600">MUO/2024/00109</td>
+<td class="py-2.5 px-3">Fire NOC Verification</td>
+<td class="py-2.5 px-3">20 Dec 2024, 11:30 AM</td>
+<td class="py-2.5 px-3">Pimpri</td>
+<td class="py-2.5 px-3">
+<span class="badge-scheduled text-[11px] font-semibold px-2 py-0.5 rounded-full inline-block">Scheduled</span>
+</td>
+<td class="py-2.5 px-3 text-center">
+<button class="text-govNavy hover:underline font-semibold text-[11px]">View</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 transition">
+<td class="py-2.5 px-3 text-govNavy font-bold">INSP/2024/00048</td>
+<td class="py-2.5 px-3 text-slate-600">MUO/2024/00201</td>
+<td class="py-2.5 px-3">Power Connection Safety</td>
+<td class="py-2.5 px-3">21 Dec 2024, 11:00 AM</td>
+<td class="py-2.5 px-3">Talegaon</td>
+<td class="py-2.5 px-3">
+<span class="badge-scheduled text-[11px] font-semibold px-2 py-0.5 rounded-full inline-block">Scheduled</span>
+</td>
+<td class="py-2.5 px-3 text-center">
+<button class="text-govNavy hover:underline font-semibold text-[11px]">View</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-slate-50 transition">
+<td class="py-2.5 px-3 text-govNavy font-bold">INSP/2024/00052</td>
+<td class="py-2.5 px-3 text-slate-600">MUO/2024/00210</td>
+<td class="py-2.5 px-3">Building Plan Compliance</td>
+<td class="py-2.5 px-3">23 Dec 2024, 03:00 PM</td>
+<td class="py-2.5 px-3">Pune II</td>
+<td class="py-2.5 px-3">
+<span class="badge-scheduled text-[11px] font-semibold px-2 py-0.5 rounded-full inline-block">Scheduled</span>
+</td>
+<td class="py-2.5 px-3 text-center">
+<button class="text-govNavy hover:underline font-semibold text-[11px]">View</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-4 py-2 border-t border-slate-200 bg-slate-50 flex items-center justify-between text-xs text-slate-500">
+<span>Showing 1-5 of 5 inspections</span>
+<div class="inline-flex space-x-1">
+<span class="px-2 py-0.5 bg-slate-200 rounded text-slate-400 cursor-not-allowed">&lt;</span>
+<span class="px-2 py-0.5 bg-govNavy text-white font-bold rounded">1</span>
+<span class="px-2 py-0.5 bg-white border border-slate-300 rounded hover:bg-slate-100 cursor-pointer">2</span>
+<span class="px-2 py-0.5 bg-white border border-slate-300 rounded hover:bg-slate-100 cursor-pointer">3</span>
+<span class="px-2 py-0.5 bg-white border border-slate-300 rounded hover:bg-slate-100 cursor-pointer">&gt;</span>
+</div>
+</div>
+</section>
+<!-- END: SECTION 1: INSPECTION SCHEDULE TABLE -->
+<!-- BEGIN: GRID SPLIT: PANEL 3 (Detail) & PANEL 4 (Submit Report) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-5" data-purpose="two-column-workspace">
+<!-- BEGIN: LEFT COLUMN - INSPECTION DETAIL VIEW (Panel 3 in Reference) -->
+<section class="lg:col-span-6 bg-white border border-slate-300 rounded shadow-xs flex flex-col justify-between" data-purpose="panel-inspection-detail">
+<div>
+<!-- Detail Header with Badge -->
+<div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+<div>
+<div class="text-[11px] text-slate-500 font-medium tracking-wide">STATUTORY FIELD DOSSIER</div>
+<h3 class="text-base font-bold text-govNavy flex items-center space-x-2">
+<span>Inspection Details</span>
+<span class="text-slate-400 font-normal">|</span>
+<span class="text-sm font-semibold text-slate-700">INSP/2024/00045</span>
+</h3>
+</div>
+<span class="badge-scheduled font-semibold text-xs px-2.5 py-0.5 rounded-full">
+                Scheduled
+              </span>
+</div>
+<!-- Detail Inner Navigation Tabs -->
+<div class="flex border-b border-slate-200 bg-white px-4 text-xs font-medium">
+<button class="py-2.5 px-3 border-b-2 border-govNavy text-govNavy font-bold">Overview</button>
+<button class="py-2.5 px-3 text-slate-600 hover:text-govNavy">Checklist</button>
+<button class="py-2.5 px-3 text-slate-600 hover:text-govNavy">Findings</button>
+<button class="py-2.5 px-3 text-slate-600 hover:text-govNavy">Documents</button>
+</div>
+<!-- Inspection Metadata Table Grid -->
+<div class="p-4 space-y-4">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-y-3.5 gap-x-4 text-xs">
+<div>
+<span class="block text-slate-500 text-[11px]">Inspection No.</span>
+<span class="font-bold text-slate-800">INSP/2024/00045</span>
+</div>
+<div>
+<span class="block text-slate-500 text-[11px]">Application No.</span>
+<span class="font-bold text-slate-800">MUO/2024/00123</span>
+</div>
+<div>
+<span class="block text-slate-500 text-[11px]">Approval Type</span>
+<span class="font-semibold text-slate-800">Factory Licence (Sec 6, Factories Act 1948)</span>
+</div>
+<div>
+<span class="block text-slate-500 text-[11px]">Enterprise</span>
+<span class="font-bold text-govNavy">Deshmukh Industries Pvt. Ltd.</span>
+</div>
+<div>
+<span class="block text-slate-500 text-[11px]">Project Name</span>
+<span class="font-semibold text-slate-800">Manufacturing Unit – Phase 1</span>
+</div>
+<div>
+<span class="block text-slate-500 text-[11px]">Scheduled Date &amp; Time</span>
+<span class="font-semibold text-slate-900 bg-amber-50 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200 inline-block">
+                    18 Dec 2024, 11:00 AM IST
+                  </span>
+</div>
+<div class="sm:col-span-2">
+<div class="flex items-start justify-between">
+<div>
+<span class="block text-slate-500 text-[11px]">Location</span>
+<span class="font-medium text-slate-800">Plot No. A-123, MIDC Chakan, Phase-II, Taluka Khed, Pune - 410501</span>
+</div>
+<a class="text-govNavy text-[11px] font-bold hover:underline flex items-center space-x-1 mt-1 flex-shrink-0 bg-blue-50 px-2 py-1 rounded border border-blue-200" href="#">
+<svg class="w-3.5 h-3.5 text-blue-700" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>View on Map</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Mandatory Inspector Instructions Box -->
+<div class="bg-blue-50/70 border border-blue-200 rounded p-3 text-xs">
+<div class="font-bold text-govNavy mb-2 flex items-center text-[11px] tracking-wide uppercase">
+<svg class="w-4 h-4 mr-1.5 text-govNavy" fill="currentColor" viewbox="0 0 20 20">
+<path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"></path>
+</svg>
+                  Mandatory Statutory Instructions
+                </div>
+<ul class="space-y-1.5 text-slate-700 text-[11px] list-disc list-inside">
+<li>Carry official Government ID card &amp; statutory inspection warrant.</li>
+<li>Verify safety compliance strictly as per NBC 2016 &amp; Maharashtra Factory Rules.</li>
+<li>Capture geotagged photographs with clear timestamp overlay.</li>
+<li>Discuss findings with authorized representative (<span class="font-semibold text-slate-900">Priya Deshmukh, MD</span>).</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Bottom Action Buttons -->
+<div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+<button class="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded hover:bg-slate-100 transition shadow-2xs" type="button">
+              Reschedule Inspection
+            </button>
+<button class="px-4 py-1.5 text-xs font-bold text-white bg-govNavy hover:bg-govBlue rounded transition shadow-xs flex items-center space-x-1.5" type="button">
+<span>Mark Inspection as Completed</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</section>
+<!-- END: LEFT COLUMN - INSPECTION DETAIL VIEW -->
+<!-- BEGIN: RIGHT COLUMN - SUBMIT INSPECTION REPORT VIEW (Panel 4 in Reference) -->
+<section class="lg:col-span-6 bg-white border border-slate-300 rounded shadow-xs flex flex-col justify-between" data-purpose="panel-submit-report">
+<div>
+<!-- Header -->
+<div class="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+<div>
+<div class="text-[11px] text-slate-500 font-medium tracking-wide">STATUTORY RETURN - FORM 7</div>
+<h3 class="text-base font-bold text-govNavy">Submit Inspection Report</h3>
+</div>
+<span class="text-xs bg-slate-200 text-slate-700 px-2 py-0.5 rounded font-mono">DISH/PUN/2024/R1</span>
+</div>
+<!-- Form Content -->
+<div class="p-4 space-y-4">
+<!-- Field Outcome Radio -->
+<div>
+<label class="block text-xs font-bold text-slate-800 mb-1.5">
+                  Inspection Outcome <span class="text-red-600">*</span>
+</label>
+<div class="flex flex-wrap gap-4 text-xs">
+<label class="inline-flex items-center space-x-2 cursor-pointer">
+<input class="text-emerald-600 focus:ring-emerald-500 h-4 w-4 border-slate-300" name="inspection_outcome" type="radio" value="compliant"/>
+<span class="font-semibold text-slate-700">Compliant</span>
+</label>
+<label class="inline-flex items-center space-x-2 cursor-pointer">
+<input class="text-red-600 focus:ring-red-500 h-4 w-4 border-slate-300" name="inspection_outcome" type="radio" value="non-compliant"/>
+<span class="font-semibold text-slate-700">Non-Compliant</span>
+</label>
+<label class="inline-flex items-center space-x-2 cursor-pointer bg-amber-50 border border-amber-300 px-2 py-1 rounded">
+<input checked="" class="text-amber-600 focus:ring-amber-500 h-4 w-4 border-slate-300" name="inspection_outcome" type="radio" value="partially-compliant"/>
+<span class="font-bold text-amber-900">Partially Compliant</span>
+</label>
+</div>
+</div>
+<!-- Field Observations Textarea -->
+<div>
+<div class="flex justify-between items-center mb-1">
+<label class="block text-xs font-bold text-slate-800">
+                    Observations &amp; Statutory Remarks <span class="text-red-600">*</span>
+</label>
+<span class="text-[10px] text-slate-500 font-medium">350 / 2000 chars</span>
+</div>
+<textarea class="w-full text-xs text-slate-800 rounded border-slate-300 focus:ring-govNavy focus:border-govNavy p-2.5 leading-relaxed bg-slate-50/50" placeholder="Enter detailed observations from site inspection..." rows="4">Physical site inspection conducted at Plot A-123, Chakan MIDC on 18 Dec 2024 in presence of factory manager. Machinery layout conforms to submitted drawings. Discrepancy observed in secondary emergency exit width (1.2m vs 1.8m required for high-occupancy workshop bay). Fire hydrant pressure test passed at 7.2 bar. Ventilation shafts operational.</textarea>
+</div>
+<!-- Upload Evidence Photos Dropzone -->
+<div>
+<label class="block text-xs font-bold text-slate-800 mb-1">
+                  Upload Evidence Photos <span class="text-red-600">*</span>
+</label>
+<div class="border-2 border-dashed border-slate-300 hover:border-govNavy rounded-md p-3 text-center bg-slate-50/60 transition cursor-pointer">
+<div class="flex flex-col items-center justify-center space-y-1">
+<svg class="w-7 h-7 text-govNavy" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+</svg>
+<p class="text-xs font-semibold text-slate-700">
+                      Drag &amp; drop images here or <span class="text-govNavy underline font-bold">click to browse</span>
+</p>
+<p class="text-[10px] text-slate-500">Supports JPG, PNG with Geotag EXIF (Max 10 MB each)</p>
+</div>
+</div>
+<!-- Uploaded Thumbnails Chips -->
+<div class="mt-2 flex flex-wrap gap-2">
+<span class="inline-flex items-center text-[11px] bg-slate-100 border border-slate-300 rounded px-2 py-0.5 text-slate-700">
+<span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span>
+                    Site_Front_Entry_Geotagged.jpg (3.2 MB)
+                    <button class="ml-1.5 text-slate-400 hover:text-red-600">×</button>
+</span>
+<span class="inline-flex items-center text-[11px] bg-slate-100 border border-slate-300 rounded px-2 py-0.5 text-slate-700">
+<span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span>
+                    Hydrant_Pressure_Gauge.jpg (2.8 MB)
+                    <button class="ml-1.5 text-slate-400 hover:text-red-600">×</button>
+</span>
+</div>
+</div>
+<!-- Supporting Documents Upload -->
+<div>
+<label class="block text-xs font-bold text-slate-800 mb-1">
+                  Supporting Documents (Optional)
+                </label>
+<div class="flex items-center space-x-2">
+<button class="inline-flex items-center space-x-1.5 bg-white border border-slate-300 px-3 py-1.5 rounded text-xs font-medium text-slate-700 hover:bg-slate-100" type="button">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Upload Signed Checklist / Notice</span>
+</button>
+<span class="text-[10px] text-slate-500">PDF, scanned with official stamp (Max 15MB)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Action Controls -->
+<div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+<button class="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded hover:bg-slate-100 transition shadow-2xs" type="button">
+              Save as Draft
+            </button>
+<div class="flex space-x-2">
+<button class="px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-800" type="button">
+                Cancel
+              </button>
+<button class="px-5 py-1.5 text-xs font-bold text-white bg-govBlue hover:bg-govNavy rounded transition shadow-xs flex items-center space-x-1.5" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Submit Statutory Report</span>
+</button>
+</div>
+</div>
+</section>
+<!-- END: RIGHT COLUMN - SUBMIT INSPECTION REPORT VIEW -->
+</div>
+<!-- END: GRID SPLIT: PANEL 3 & PANEL 4 -->
+<!-- BEGIN: STATUTORY AUDIT & DIGITAL SIGNATURE VERIFICATION ACCORDION -->
+<section class="bg-white border border-slate-300 rounded p-3 text-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-2 shadow-2xs" data-purpose="statutory-audit-summary">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded bg-emerald-50 border border-emerald-300 flex items-center justify-center text-emerald-700 font-bold">
+            ✓
+          </div>
+<div>
+<div class="font-bold text-slate-900 text-xs">Immutable Inspection Audit Trail Active</div>
+<div class="text-[11px] text-slate-500">
+              Inspector GPS Coordinate Lock: <span class="font-mono text-slate-700 font-medium">18.7561° N, 73.8427° E</span> | Aadhaar e-Sign Token: <span class="font-mono text-slate-700 font-medium">DISH-PUN-ESIGN-8831</span>
+</div>
+</div>
+</div>
+<div class="text-right text-[11px] text-slate-500">
+          Last Synced: <span class="font-semibold text-slate-700">18 Dec 2024, 11:42 AM IST</span>
+</div>
+</section>
+<!-- END: STATUTORY AUDIT & DIGITAL SIGNATURE VERIFICATION ACCORDION -->
+</main>
+<!-- END: Main Work Area -->
+</div>
+<!-- END: Master Layout Shell -->
+<!-- BEGIN: Institutional Official Portal Footer -->
+<footer class="bg-govNavy text-white border-t-2 border-amber-500 text-xs" data-purpose="institutional-footer">
+<div class="max-w-7xl mx-auto px-6 py-5 grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Col 1: Government Authority -->
+<div>
+<div class="font-bold uppercase tracking-wider text-amber-400 mb-1 text-[11px]">Directorate of Industries</div>
+<p class="text-slate-300 text-[11px] leading-relaxed">
+          Government of Maharashtra.<br/>
+          Single Window Clearance System enacted under Maharashtra Industry Trade and Investment Facilitation Act.
+        </p>
+</div>
+<!-- Col 2: Statutory Compliance -->
+<div>
+<div class="font-bold uppercase tracking-wider text-amber-400 mb-1 text-[11px]">Statutory Compliance</div>
+<p class="text-slate-300 text-[11px] leading-relaxed">
+          Maharashtra Right to Public Services Act (RTS), 2015.<br/>
+          Time-bound delivery guaranteed for all field verifications and statutory NOCs.
+        </p>
+</div>
+<!-- Col 3: Standards -->
+<div>
+<div class="font-bold uppercase tracking-wider text-amber-400 mb-1 text-[11px]">Standards &amp; Security</div>
+<p class="text-slate-300 text-[11px] leading-relaxed">
+          Compliant with GIGW 3.0 Guidelines.<br/>
+          W3C WCAG 2.1 Level AA Accessibility Certified.<br/>
+          ISO 27001 Information Security Standard.
+        </p>
+</div>
+<!-- Col 4: Technical Hosting -->
+<div>
+<div class="font-bold uppercase tracking-wider text-amber-400 mb-1 text-[11px]">Hosted &amp; Designed By</div>
+<p class="text-slate-300 text-[11px] leading-relaxed">
+          Designed and Developed by MahaIT Corporation Limited &amp; National Informatics Centre (NIC), Maharashtra State Centre.
+        </p>
+</div>
+</div>
+<!-- Copyright Strip -->
+<div class="bg-govNavyDark px-6 py-2.5 text-center text-slate-400 text-[10px] border-t border-slate-800">
+      © 2024 Government of Maharashtra. All rights reserved. MahaUdyam One™ Portal Content Managed by Department of Industries, Energy &amp; Labour.
+    </div>
+</footer>
+<!-- END: Institutional Official Portal Footer -->
+</body></html>

@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MahaUdyam One - Officer Application Workspace</title>
+<!-- Tailwind CSS CDN with forms and container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gov: {
+              navy: '#0f2942',
+              blue: '#1e40af',
+              accent: '#2563eb',
+              sky: '#f0f6ff',
+              surface: '#f8fafc',
+              border: '#e2e8f0',
+              muted: '#64748b'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-layout-and-scrollbars">
+    /* Subtle custom scrollbar for officer high-density interface */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body class="bg-[#f1f5f9] text-[#1e293b] font-sans min-h-screen flex flex-col antialiased">
+<!-- BEGIN: TopBarGovernmentHeader -->
+<header class="bg-white border-b border-gov-border sticky top-0 z-30 shadow-xs" data-purpose="officer-portal-header">
+<div class="px-5 py-2.5 flex items-center justify-between">
+<!-- Left: Official State Emblem & Portal Identifier -->
+<div class="flex items-center gap-3.5">
+<div class="flex items-center gap-2.5">
+<!-- Maharashtra Government Seal Placeholder / Vector Representation -->
+<div class="w-10 h-10 rounded-full border border-amber-500/30 bg-amber-50 flex items-center justify-center p-1 text-center shadow-xs">
+<svg class="w-7 h-7 text-amber-800" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9.5"></circle>
+<path d="M12 4v4m0 8v4M4 12h4m8 0h4"></path>
+<circle cx="12" cy="12" fill="#fef3c7" r="3.5"></circle>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-1.5 leading-none">
+<span class="text-xs font-semibold uppercase tracking-wider text-slate-700">Government of Maharashtra</span>
+<span class="text-[11px] text-slate-400">|</span>
+<span class="text-xs font-medium text-slate-600">महाराष्ट्र शासन</span>
+</div>
+<div class="flex items-baseline gap-2 mt-0.5">
+<h1 class="text-base font-bold text-gov-navy tracking-tight">MahaUdyam One <span class="text-xs font-semibold px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 ml-1">Officer Desk</span></h1>
+<span class="text-[11px] text-gov-muted hidden lg:inline">Single Window for a Progressive Maharashtra</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Center: Universal Record Search -->
+<div class="hidden md:flex flex-1 max-w-md mx-6">
+<div class="relative w-full">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</span>
+<input class="w-full pl-9 pr-4 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-md focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all" placeholder="Search Application No., Enterprise, UDYAM..." type="search"/>
+</div>
+</div>
+<!-- Right: Utility Icons and Officer Profile -->
+<div class="flex items-center gap-4">
+<!-- Notification Bell -->
+<button class="relative p-1.5 text-slate-600 hover:text-slate-900 rounded-md hover:bg-slate-100 transition" title="Pending Notifications">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="absolute 0 top-0.5 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white">5</span>
+</button>
+<!-- Officer Details Pill -->
+<div class="flex items-center gap-3 border-l border-slate-200 pl-4">
+<div class="w-8 h-8 rounded-full bg-blue-700 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+            RP
+          </div>
+<div class="hidden sm:block text-left leading-tight">
+<p class="text-xs font-bold text-slate-800">Rohit Patil</p>
+<p class="text-[11px] text-slate-500">Approving Officer (Level 1)</p>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- END: TopBarGovernmentHeader -->
+<!-- BEGIN: MainOfficerDeskLayout -->
+<div class="flex flex-1 overflow-hidden" data-purpose="officer-workspace-container">
+<!-- Officer Left Navigation Sidebar -->
+<aside class="w-56 bg-[#0c1f33] text-slate-300 flex-shrink-0 flex flex-col justify-between hidden md:flex border-r border-slate-800" data-purpose="officer-vertical-sidebar">
+<div class="py-4">
+<!-- Division Scope Tag -->
+<div class="px-4 mb-4">
+<div class="bg-slate-800/80 rounded px-2.5 py-1.5 text-[10px] border border-slate-700">
+<span class="block text-slate-400 font-medium uppercase tracking-wider">Jurisdiction Desk</span>
+<span class="block font-semibold text-white truncate">DISH Pune Circle</span>
+</div>
+</div>
+<!-- Sidebar Navigation Links -->
+<nav class="space-y-0.5 px-2">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Dashboard</span>
+</a>
+<!-- Application Queue (Active Selection) -->
+<a class="flex items-center justify-between px-3 py-2 rounded text-xs font-semibold text-white bg-blue-700/80 shadow-xs" href="#">
+<div class="flex items-center gap-3">
+<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Application Queue</span>
+</div>
+<span class="bg-blue-900 text-blue-200 text-[10px] font-bold px-1.5 py-0.5 rounded-full">60</span>
+</a>
+<!-- Inspections -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Inspections</span>
+</a>
+<!-- SLA Monitoring -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>SLA Monitoring</span>
+</a>
+<!-- Reports -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Reports</span>
+</a>
+</nav>
+</div>
+<!-- Quick System Info Badge -->
+<div class="p-3 border-t border-slate-800 text-[11px] text-slate-500">
+<p class="font-medium text-slate-400">MAHA-RTS Service ID</p>
+<p class="text-[10px] text-slate-500 font-mono">DISH-FL-2024-RTS</p>
+</div>
+</aside>
+<!-- Main Workspace Area -->
+<main class="flex-1 flex flex-col overflow-y-auto bg-slate-100" data-purpose="workspace-main-panel">
+<!-- BEGIN: ApplicationHeaderSection -->
+<section class="bg-white border-b border-slate-200 px-6 py-4 shadow-xs" data-purpose="application-header-summary">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<!-- ID, Service Type & Status Badge -->
+<div>
+<div class="flex items-center flex-wrap gap-2.5">
+<span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-mono">ID: MUO/2024/000123</span>
+<span class="text-slate-300">|</span>
+<h2 class="text-base font-bold text-slate-900 tracking-tight">Factory Licence</h2>
+<!-- Under Scrutiny Status Badge (Amber) -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-300">
+<span class="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                Under Scrutiny
+              </span>
+</div>
+<p class="text-xs text-slate-500 mt-1">
+              Deshmukh Industries Pvt. Ltd. • Manufacturing Unit - Phase 1, Hinjawadi Pune
+            </p>
+</div>
+<!-- SLA Clock & Quick Action Forward -->
+<div class="flex items-center gap-4">
+<div class="text-right">
+<div class="flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded">
+<svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>SLA: 12 days remaining</span>
+</div>
+<span class="text-[10px] text-slate-400 block mt-0.5">Statutory RTS Deadline: 28 Dec 2024</span>
+</div>
+<!-- Forward Action Button -->
+<button class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium px-4 py-2 rounded shadow-xs transition focus:ring-2 focus:ring-blue-500" onclick="switchTab('decision-tab', document.getElementById('tab-btn-decision'))" type="button">
+<span>Forward</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Horizontal Tab Navigation Strip -->
+<div class="mt-4 border-b border-slate-200 -mb-4 flex gap-1 overflow-x-auto text-xs font-medium text-slate-600" data-purpose="tab-navigation-bar">
+<button class="px-3.5 py-2.5 border-b-2 border-blue-600 text-blue-700 font-semibold focus:outline-none transition whitespace-nowrap" id="tab-btn-overview" onclick="switchTab('overview-tab', this)">
+            Overview
+          </button>
+<button class="px-3.5 py-2.5 border-b-2 border-transparent hover:text-slate-900 hover:border-slate-300 focus:outline-none transition whitespace-nowrap" id="tab-btn-applicant" onclick="switchTab('applicant-tab', this)">
+            Applicant &amp; Project Data
+          </button>
+<button class="px-3.5 py-2.5 border-b-2 border-transparent hover:text-slate-900 hover:border-slate-300 focus:outline-none transition whitespace-nowrap flex items-center gap-1.5" id="tab-btn-documents" onclick="switchTab('documents-tab', this)">
+<span>Documents</span>
+<span class="bg-slate-200 text-slate-700 text-[10px] font-bold px-1.5 py-0.2 rounded-full">4</span>
+</button>
+<button class="px-3.5 py-2.5 border-b-2 border-transparent hover:text-slate-900 hover:border-slate-300 focus:outline-none transition whitespace-nowrap flex items-center gap-1.5" id="tab-btn-query" onclick="switchTab('query-tab', this)">
+<span>Query</span>
+<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.2 rounded-full">1</span>
+</button>
+<button class="px-3.5 py-2.5 border-b-2 border-transparent hover:text-slate-900 hover:border-slate-300 focus:outline-none transition whitespace-nowrap flex items-center gap-1.5" id="tab-btn-inspection" onclick="switchTab('inspection-tab', this)">
+<span>Inspection</span>
+<span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-1.5 py-0.2 rounded-full">1</span>
+</button>
+<button class="px-3.5 py-2.5 border-b-2 border-transparent hover:text-slate-900 hover:border-slate-300 focus:outline-none transition whitespace-nowrap" id="tab-btn-decision" onclick="switchTab('decision-tab', this)">
+            Decision
+          </button>
+<button class="px-3.5 py-2.5 border-b-2 border-transparent hover:text-slate-900 hover:border-slate-300 focus:outline-none transition whitespace-nowrap" id="tab-btn-history" onclick="switchTab('history-tab', this)">
+            History
+          </button>
+</div>
+</section>
+<!-- END: ApplicationHeaderSection -->
+<!-- BEGIN: TabContentWrapper -->
+<div class="p-6 space-y-6">
+<!-- TAB 1: OVERVIEW & BASIC APPLICANT SUMMARY (Panel 6) -->
+<div class="tab-content active space-y-5" id="overview-tab">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+<!-- Applicant & Enterprise Details Card -->
+<div class="bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden">
+<div class="bg-slate-50/80 px-4 py-2.5 border-b border-slate-200 flex justify-between items-center">
+<h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Applicant &amp; Enterprise Details</h3>
+<span class="text-[11px] text-blue-600 hover:underline cursor-pointer">Verify UDYAM</span>
+</div>
+<div class="p-4">
+<dl class="grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
+<div>
+<dt class="text-slate-500 font-medium">Applicant Name</dt>
+<dd class="text-slate-900 font-semibold mt-0.5">Priya Deshmukh</dd>
+</div>
+<div>
+<dt class="text-slate-500 font-medium">Designation</dt>
+<dd class="text-slate-900 font-semibold mt-0.5">Proprietor / Director</dd>
+</div>
+<div>
+<dt class="text-slate-500 font-medium">Enterprise Name</dt>
+<dd class="text-slate-900 font-semibold mt-0.5">Deshmukh Industries Pvt. Ltd.</dd>
+</div>
+<div>
+<dt class="text-slate-500 font-medium">Udyam Reg. No.</dt>
+<dd class="text-slate-900 font-mono font-semibold mt-0.5">UDYAM-MH-26-0001234</dd>
+</div>
+<div>
+<dt class="text-slate-500 font-medium">Project Name</dt>
+<dd class="text-slate-900 font-semibold mt-0.5">Manufacturing Unit - Phase 1</dd>
+</div>
+<div>
+<dt class="text-slate-500 font-medium">Location</dt>
+<dd class="text-slate-900 font-semibold mt-0.5">MIDC, Hinjawadi, Pune</dd>
+</div>
+<div>
+<dt class="text-slate-500 font-medium">Application Date</dt>
+<dd class="text-slate-900 font-semibold mt-0.5">12 Dec 2024</dd>
+</div>
+<div>
+<dt class="text-slate-500 font-medium">Constitution of Business</dt>
+<dd class="text-slate-900 font-semibold mt-0.5">Private Limited Company</dd>
+</div>
+</dl>
+</div>
+</div>
+<!-- Application Summary & Parameters -->
+<div class="bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden">
+<div class="bg-slate-50/80 px-4 py-2.5 border-b border-slate-200 flex justify-between items-center">
+<h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Application Summary</h3>
+<span class="text-[11px] text-slate-500">Statutory Clearances</span>
+</div>
+<div class="p-4">
+<dl class="grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
+<div>
+<dt class="text-slate-500 font-medium">Approval Type</dt>
+<dd class="text-slate-900 font-semibold mt-0.5">Factory Licence (Sec 6)</dd>
+</div>
+<div>
+<dt class="text-slate-500 font-medium">Competent Department</dt>
+<dd class="text-slate-900 font-semibold mt-0.5">Labour (DISH)</dd>
+</div>
+<div>
+<dt class="text-slate-500 font-medium">Proposed Investment</dt>
+<dd class="text-slate-900 font-semibold mt-0.5">₹ 25,00,00,000 (25 Cr)</dd>
+</div>
+<div>
+<dt class="text-slate-500 font-medium">Proposed Employment</dt>
+<dd class="text-slate-900 font-semibold mt-0.5">150 Workers</dd>
+</div>
+<div>
+<dt class="text-slate-500 font-medium">Proposed Date of Commencement</dt>
+<dd class="text-slate-900 font-semibold mt-0.5">01 Apr 2025</dd>
+</div>
+<div>
+<dt class="text-slate-500 font-medium">Power Requirement</dt>
+<dd class="text-slate-900 font-semibold mt-0.5">450 KVA (MSEDCL)</dd>
+</div>
+<div class="col-span-2">
+<dt class="text-slate-500 font-medium">Activity Code / NIC</dt>
+<dd class="text-slate-900 font-semibold mt-0.5">2819 - Manufacture of other general-purpose machinery</dd>
+</div>
+</dl>
+</div>
+</div>
+</div>
+<!-- Quick Navigation Banner into Scrutiny Tasks -->
+<div class="bg-blue-50 border border-blue-200 rounded-lg p-3.5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<p class="text-xs font-bold text-blue-900">Current Action Required: Document Scrutiny &amp; Inspection Cross-verification</p>
+<p class="text-[11px] text-blue-700">1 document needs correction. Site inspection report is scheduled for 20 Dec 2024.</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 text-xs font-medium text-blue-700 bg-white border border-blue-300 rounded hover:bg-blue-50 transition" onclick="switchTab('documents-tab', document.getElementById('tab-btn-documents'))">
+                Review Documents
+              </button>
+<button class="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded hover:bg-blue-700 transition" onclick="switchTab('decision-tab', document.getElementById('tab-btn-decision'))">
+                Prepare Recommendation
+              </button>
+</div>
+</div>
+</div>
+<!-- TAB 2: APPLICANT & PROJECT DATA (Full Specs) -->
+<div class="tab-content space-y-4" id="applicant-tab">
+<div class="bg-white rounded-lg border border-slate-200 p-5 shadow-xs">
+<h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4 border-b pb-2">Factory Technical Specifications</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+<div class="p-3 bg-slate-50 rounded border border-slate-200">
+<p class="text-slate-500 font-medium">Installed Horsepower (HP)</p>
+<p class="text-base font-bold text-slate-900 mt-1">350 HP</p>
+</div>
+<div class="p-3 bg-slate-50 rounded border border-slate-200">
+<p class="text-slate-500 font-medium">Max Number of Workers</p>
+<p class="text-base font-bold text-slate-900 mt-1">150 (Day: 100, Night: 50)</p>
+</div>
+<div class="p-3 bg-slate-50 rounded border border-slate-200">
+<p class="text-slate-500 font-medium">Hazardous Chemical Classification</p>
+<p class="text-base font-bold text-amber-700 mt-1">Non-Major Hazard (Category B)</p>
+</div>
+</div>
+<div class="mt-5">
+<h4 class="text-xs font-bold text-slate-700 mb-2">Factory Land &amp; Plot Demarcation</h4>
+<table class="min-w-full text-xs text-left border border-slate-200 rounded">
+<thead class="bg-slate-50 text-slate-600">
+<tr>
+<th class="p-2 border-b">Plot No</th>
+<th class="p-2 border-b">Industrial Area</th>
+<th class="p-2 border-b">Total Area (Sq. Mtr.)</th>
+<th class="p-2 border-b">Built-Up Area</th>
+<th class="p-2 border-b">Survey / Gut No</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr>
+<td class="p-2 font-mono">Plot C-24</td>
+<td class="p-2">Hinjawadi Phase II MIDC</td>
+<td class="p-2">4,800.00</td>
+<td class="p-2">2,450.00</td>
+<td class="p-2">Survey 88/2A</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- TAB 3: DOCUMENTS TAB (Panel 7) -->
+<div class="tab-content space-y-4" data-purpose="officer-document-scrutiny-tab" id="documents-tab">
+<div class="bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden">
+<div class="p-4 bg-white border-b border-slate-200 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+<div>
+<h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Mandatory Uploaded Documents</h3>
+<p class="text-xs text-slate-500">Scrutinize attachments against statutory checklists under Maharashtra Factories Rules</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded hover:bg-slate-50 transition shadow-xs" type="button">
+                  + Add Comment
+                </button>
+<button class="px-3.5 py-1.5 text-xs font-semibold text-white bg-blue-700 rounded hover:bg-blue-800 transition shadow-xs" type="button">
+                  Verify / Reject
+                </button>
+</div>
+</div>
+<!-- Documents Scrutiny Table (Matching Panel 7) -->
+<div class="overflow-x-auto">
+<table class="w-full text-xs text-left" id="documents-table">
+<thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+<tr>
+<th class="py-3 px-4">Document Name</th>
+<th class="py-3 px-4">Submitted On</th>
+<th class="py-3 px-4">Status</th>
+<th class="py-3 px-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200">
+<!-- Row 1: Land Ownership Document -->
+<tr class="hover:bg-slate-50/70 transition">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" fill-rule="evenodd"></path>
+</svg>
+<span class="font-medium text-slate-900">Land Ownership Document</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-slate-600">12 Dec 2024</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<svg class="w-3 h-3" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg>
+                        Verified
+                      </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button class="px-2.5 py-1 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition">View</button>
+</td>
+</tr>
+<!-- Row 2: Site Plan -->
+<tr class="hover:bg-slate-50/70 transition">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" fill-rule="evenodd"></path>
+</svg>
+<span class="font-medium text-slate-900">Site Plan</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-slate-600">12 Dec 2024</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-300">
+<span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                        Under Verification
+                      </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button class="px-2.5 py-1 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition">View</button>
+</td>
+</tr>
+<!-- Row 3: Identity Proof -->
+<tr class="hover:bg-slate-50/70 transition">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" fill-rule="evenodd"></path>
+</svg>
+<span class="font-medium text-slate-900">Identity Proof</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-slate-600">12 Dec 2024</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<svg class="w-3 h-3" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill-rule="evenodd"></path></svg>
+                        Verified
+                      </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button class="px-2.5 py-1 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition">View</button>
+</td>
+</tr>
+<!-- Row 4: Environmental Clearance -->
+<tr class="hover:bg-slate-50/70 transition bg-red-50/20">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<svg class="w-4 h-4 text-red-500 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" fill-rule="evenodd"></path>
+</svg>
+<span class="font-medium text-slate-900">Environmental Clearance</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-slate-600">12 Dec 2024</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-red-50 text-red-700 border border-red-200">
+<svg class="w-3 h-3" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" fill-rule="evenodd"></path></svg>
+                        Rejected
+                      </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button class="px-2.5 py-1 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition">View</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Scrutiny Audit Flag -->
+<div class="p-3 bg-slate-50 border-t border-slate-200 text-slate-500 text-[11px] flex justify-between items-center">
+<span>Accepted formats: PDF, JPG, PNG (Max 10 MB per file)</span>
+<span>4 of 4 statutory documents scrutinised</span>
+</div>
+</div>
+</div>
+<!-- TAB 4: QUERY TAB (Panel 8) -->
+<div class="tab-content space-y-4" data-purpose="officer-applicant-query-exchange" id="query-tab">
+<div class="bg-white rounded-lg border border-slate-200 p-5 shadow-xs">
+<div class="flex items-center justify-between border-b pb-3 mb-4">
+<div>
+<h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Query Management</h3>
+<p class="text-xs text-slate-500">Official RTS inquiry communications and clarifications thread</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 transition" type="button">
+                  Raise New Query
+                </button>
+<button class="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 border border-slate-200 rounded hover:bg-slate-200 transition" type="button">
+                  Close Query
+                </button>
+</div>
+</div>
+<!-- Thread of Queries & Responses -->
+<div class="space-y-4">
+<!-- Query Card 1: Raised by Officer -->
+<div class="border border-amber-200 bg-amber-50/40 rounded-lg p-4">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="p-1 rounded bg-amber-100 text-amber-800 text-[10px] font-bold uppercase">Query Raised by Officer</span>
+<span class="text-xs font-semibold text-slate-800">Rohit Patil (Approving Officer)</span>
+</div>
+<span class="text-[11px] text-slate-500 font-mono">12 Dec 2024, 03:15 PM</span>
+</div>
+<p class="text-xs text-slate-700 leading-relaxed bg-white p-3 rounded border border-amber-100">
+                  Please provide the latest site plan with dimensions and fire safety NOC as per the checklist.
+                </p>
+</div>
+<!-- Response Card 1: Response from Applicant -->
+<div class="border border-emerald-200 bg-emerald-50/40 rounded-lg p-4 ml-4">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="p-1 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase">Response from Applicant</span>
+<span class="text-xs font-semibold text-slate-800">Priya Deshmukh</span>
+</div>
+<span class="text-[11px] text-slate-500 font-mono">13 Dec 2024, 10:20 AM</span>
+</div>
+<p class="text-xs text-slate-700 leading-relaxed bg-white p-3 rounded border border-emerald-100">
+                  Updated site plan and fire safety NOC are attached.
+                </p>
+<!-- Attached File Pill -->
+<div class="mt-3 flex items-center gap-2">
+<div class="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-300 rounded shadow-2xs text-xs text-slate-800 hover:border-blue-400 cursor-pointer">
+<svg class="w-4 h-4 text-red-600" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" fill-rule="evenodd"></path>
+</svg>
+<span class="font-medium">Site_Plan_Updated.pdf</span>
+<span class="text-[10px] text-slate-400">(2.4 MB)</span>
+<svg class="w-3.5 h-3.5 text-slate-400 hover:text-slate-700 ml-1" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- TAB 5: INSPECTION TAB (Panel 9) -->
+<div class="tab-content space-y-4" data-purpose="officer-inspection-review" id="inspection-tab">
+<div class="bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden">
+<div class="px-5 py-3 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+<h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Inspection Details</h3>
+<span class="text-xs text-blue-700 font-medium">Field Survey Schedule</span>
+</div>
+<!-- Inspection Details Table (Panel 9) -->
+<div class="overflow-x-auto">
+<table class="w-full text-xs text-left" id="inspection-table">
+<thead class="bg-white text-slate-600 font-semibold border-b border-slate-200">
+<tr>
+<th class="py-3 px-4">Inspection No.</th>
+<th class="py-3 px-4">Scheduled Date</th>
+<th class="py-3 px-4">Location</th>
+<th class="py-3 px-4">Inspecting Officer</th>
+<th class="py-3 px-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr>
+<td class="py-3 px-4 font-mono font-medium text-slate-800">INSP/2024/00045</td>
+<td class="py-3 px-4 text-slate-700">20 Dec 2024, 11:00 AM</td>
+<td class="py-3 px-4 text-slate-700">MIDC, Pune</td>
+<td class="py-3 px-4 font-medium text-slate-900">S. Kulkarni</td>
+<td class="py-3 px-4 text-right">
+<button class="px-2.5 py-1 text-xs font-semibold text-blue-700 hover:text-blue-900 bg-blue-50 border border-blue-200 rounded">
+                        View Report
+                      </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Inspection Report Placeholder Container -->
+<div class="p-8 text-center bg-slate-50/50 border-t border-slate-200">
+<div class="w-12 h-12 rounded-full bg-slate-200/80 mx-auto flex items-center justify-center text-slate-400 mb-2">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+</div>
+<h4 class="text-xs font-bold text-slate-700">Latest Inspection Report</h4>
+<p class="text-xs text-slate-500 mt-1">Report will be available after inspection on 20 Dec 2024.</p>
+</div>
+</div>
+</div>
+<!-- TAB 6: DECISION TAB (Panel 10) - Officer Recommendation Desk -->
+<div class="tab-content space-y-4" data-purpose="officer-scrutiny-recommendation-desk" id="decision-tab">
+<div class="bg-white rounded-lg border border-slate-200 shadow-xs p-5 max-w-3xl">
+<div class="border-b border-slate-200 pb-3 mb-4">
+<h3 class="text-sm font-bold text-slate-900 tracking-tight">Statutory Scrutiny Recommendation</h3>
+<p class="text-xs text-slate-500 mt-0.5">Level 1 Scrutiny Officer Recommendation to Statutory Approving Authority</p>
+</div>
+<!-- Form: Scrutiny Officer Recommendation (Faithful to Panel 10) -->
+<form class="space-y-5" onsubmit="event.preventDefault();">
+<!-- Recommendation Options -->
+<div>
+<label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Recommendation</label>
+<div class="space-y-2 text-xs">
+<label class="flex items-center gap-3 p-2.5 rounded border border-slate-200 hover:bg-slate-50 cursor-pointer">
+<input checked="" class="text-blue-600 focus:ring-blue-500 h-4 w-4" name="recommendation" type="radio" value="approve"/>
+<span class="font-medium text-slate-800">Recommend Approval</span>
+</label>
+<label class="flex items-center gap-3 p-2.5 rounded border border-slate-200 hover:bg-slate-50 cursor-pointer">
+<input class="text-blue-600 focus:ring-blue-500 h-4 w-4" name="recommendation" type="radio" value="reject"/>
+<span class="font-medium text-slate-800">Recommend Rejection</span>
+</label>
+<label class="flex items-center gap-3 p-2.5 rounded border border-slate-200 hover:bg-slate-50 cursor-pointer">
+<input class="text-blue-600 focus:ring-blue-500 h-4 w-4" name="recommendation" type="radio" value="clarify"/>
+<span class="font-medium text-slate-800">Request Further Clarification</span>
+</label>
+</div>
+</div>
+<!-- Comments Area -->
+<div>
+<label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Comments <span class="text-red-500">*</span>
+</label>
+<textarea class="w-full text-xs border border-slate-300 rounded-md p-2.5 focus:ring-2 focus:ring-blue-600 focus:border-transparent" placeholder="Enter scrutiny notes and justification..." rows="3">All documents are in order. Recommend approval.</textarea>
+</div>
+<!-- Forward To Target Authority -->
+<div>
+<label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Forward To <span class="text-red-500">*</span>
+</label>
+<select class="w-full text-xs border border-slate-300 rounded-md p-2.5 bg-white focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+<option selected="">Statutory Approving Authority (Level 2)</option>
+<option>Joint Director of Industries (Pune Circle)</option>
+<option>Chief Inspector of Factories (Labour Dept)</option>
+</select>
+<span class="text-[11px] text-slate-400 mt-1 block">Officer cannot make direct grant; case is escalated to Level 2 for final digital signature.</span>
+</div>
+<!-- Form Buttons -->
+<div class="pt-3 border-t border-slate-200 flex items-center justify-end gap-3">
+<button class="px-4 py-2 text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded hover:bg-slate-50 transition" type="button">
+                  Save as Draft
+                </button>
+<button class="px-4 py-2 text-xs font-bold text-white bg-blue-700 rounded hover:bg-blue-800 shadow-xs transition" type="submit">
+                  Submit Recommendation
+                </button>
+</div>
+</form>
+</div>
+</div>
+<!-- TAB 7: APPLICATION TIMELINE & HISTORY (Panel 11) -->
+<div class="tab-content space-y-4" data-purpose="officer-audit-trail-timeline" id="history-tab">
+<div class="bg-white rounded-lg border border-slate-200 p-5 shadow-xs max-w-2xl">
+<h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-4 border-b pb-2">
+              Application Timeline &amp; Audit Trail
+            </h3>
+<!-- Timeline Sequence (Panel 11) -->
+<div class="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+<!-- Event 1: Submitted -->
+<div class="relative flex items-start gap-3">
+<div class="absolute -left-6 mt-1 w-3.5 h-3.5 rounded-full bg-emerald-600 ring-4 ring-white"></div>
+<div>
+<p class="text-xs font-bold text-slate-800">Application submitted by applicant</p>
+<p class="text-[11px] text-slate-500 font-mono">12 Dec 2024, 11:15 AM</p>
+</div>
+</div>
+<!-- Event 2: Documents Verified -->
+<div class="relative flex items-start gap-3">
+<div class="absolute -left-6 mt-1 w-3.5 h-3.5 rounded-full bg-blue-600 ring-4 ring-white"></div>
+<div>
+<p class="text-xs font-bold text-slate-800">Documents verified</p>
+<p class="text-[11px] text-slate-500 font-mono">13 Dec 2024, 02:30 PM</p>
+</div>
+</div>
+<!-- Event 3: Query Raised -->
+<div class="relative flex items-start gap-3">
+<div class="absolute -left-6 mt-1 w-3.5 h-3.5 rounded-full bg-amber-500 ring-4 ring-white"></div>
+<div>
+<p class="text-xs font-bold text-slate-800">Query raised</p>
+<p class="text-[11px] text-slate-500 font-mono">14 Dec 2024, 10:00 AM</p>
+</div>
+</div>
+<!-- Event 4: Response Received -->
+<div class="relative flex items-start gap-3">
+<div class="absolute -left-6 mt-1 w-3.5 h-3.5 rounded-full bg-emerald-600 ring-4 ring-white"></div>
+<div>
+<p class="text-xs font-bold text-slate-800">Response received from applicant</p>
+<p class="text-[11px] text-slate-500 font-mono">16 Dec 2024, 04:20 PM</p>
+</div>
+</div>
+<!-- Event 5: Inspection Scheduled -->
+<div class="relative flex items-start gap-3">
+<div class="absolute -left-6 mt-1 w-3.5 h-3.5 rounded-full bg-blue-600 ring-4 ring-white"></div>
+<div>
+<p class="text-xs font-bold text-slate-800">Inspection scheduled</p>
+<p class="text-[11px] text-slate-500 font-mono">18 Dec 2024, 11:00 AM</p>
+</div>
+</div>
+<!-- Event 6: Current State -->
+<div class="relative flex items-start gap-3">
+<div class="absolute -left-6 mt-1 w-3.5 h-3.5 rounded-full bg-amber-500 ring-4 ring-white animate-pulse"></div>
+<div>
+<p class="text-xs font-bold text-amber-800">Under scrutiny</p>
+<p class="text-[11px] text-slate-500 font-mono">18 Dec 2024, 11:30 AM</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END: TabContentWrapper -->
+</main>
+</div>
+<!-- END: MainOfficerDeskLayout -->
+<!-- BEGIN: GovernmentStatutoryFooter -->
+<footer class="bg-white border-t border-slate-200 py-2.5 px-6 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2" data-purpose="officer-portal-footer">
+<div class="flex items-center gap-3">
+<span>Directorate of Industries, Government of Maharashtra</span>
+<span class="text-slate-300">|</span>
+<span>Maharashtra Right to Services (RTS) Act 2015 Compliant</span>
+</div>
+<div class="flex items-center gap-3 text-[11px]">
+<span class="text-slate-400">GIGW 3.0 • W3C WCAG 2.1 AA</span>
+<span class="text-slate-300">|</span>
+<span>Officer Desk Version 4.1.2</span>
+</div>
+</footer>
+<!-- END: GovernmentStatutoryFooter -->
+<!-- Tab Switching Handler -->
+<script data-purpose="tab-interaction-controller">
+    function switchTab(tabId, element) {
+      // Hide all tabs
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabContents.forEach(tab => tab.classList.remove('active'));
+
+      // Show targeted tab
+      const targetTab = document.getElementById(tabId);
+      if (targetTab) {
+        targetTab.classList.add('active');
+      }
+
+      // Reset tab button states
+      const tabButtons = document.querySelectorAll('[data-purpose="tab-navigation-bar"] button');
+      tabButtons.forEach(btn => {
+        btn.classList.remove('border-blue-600', 'text-blue-700', 'font-semibold');
+        btn.classList.add('border-transparent', 'text-slate-600');
+      });
+
+      // Highlight active button
+      if (element) {
+        element.classList.remove('border-transparent', 'text-slate-600');
+        element.classList.add('border-blue-600', 'text-blue-700', 'font-semibold');
+      }
+    }
+  </script>
+</body></html>

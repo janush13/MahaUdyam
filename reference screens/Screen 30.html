@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MahaUdyam One - State Leadership &amp; Operational Analytics Console</title>
+<!-- Tailwind CSS v3 with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gov: {
+              deep: '#0b2545',
+              navy: '#133e68',
+              slate: '#1e3a5f',
+              accent: '#d97706',
+              saffron: '#e65100',
+              surface: '#f8fafc',
+              border: '#cbd5e1'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for Dense Government Data Presentation -->
+<style data-purpose="base-layout">
+    body {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      min-width: 1440px;
+    }
+    .dense-table th, .dense-table td {
+      padding: 8px 12px;
+    }
+  </style>
+<style data-purpose="chart-styling">
+    .bar-submitted { background-color: #2563eb; }
+    .bar-approved { background-color: #16a34a; }
+    .bar-rejected { background-color: #dc2626; }
+  </style>
+</head>
+<body class="font-sans antialiased text-xs md:text-sm">
+<!-- BEGIN: Institutional Top Header -->
+<header class="bg-gov-deep text-white border-b-2 border-amber-600 sticky top-0 z-50">
+<div class="max-w-[1440px] mx-auto px-4 py-2 flex items-center justify-between">
+<!-- Left: State Emblem, Portal Title & System Scope -->
+<div class="flex items-center space-x-3">
+<!-- SVG Emblem Placeholder representing Govt. of Maharashtra Seal -->
+<div class="w-10 h-10 rounded-full bg-white flex items-center justify-center border-2 border-amber-500 shadow-sm flex-shrink-0" title="Government of Maharashtra">
+<svg class="w-7 h-7 text-gov-deep" fill="currentColor" viewbox="0 0 24 24">
+<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<span class="text-[11px] uppercase tracking-wider font-semibold text-amber-300">महाराष्ट्र शासन | Government of Maharashtra</span>
+<span class="bg-amber-500/20 text-amber-300 text-[10px] px-1.5 py-0.5 rounded font-mono uppercase font-bold border border-amber-400/40">Leadership Console</span>
+</div>
+<h1 class="text-base font-bold tracking-tight text-white flex items-center gap-2">
+            MahaUdyam One
+            <span class="text-xs font-normal text-slate-300">| Single Window for a Progressive Maharashtra</span>
+</h1>
+</div>
+</div>
+<!-- Center-Right: RTS Live Badge & Search -->
+<div class="flex items-center space-x-4">
+<div class="hidden lg:flex items-center space-x-2 bg-gov-navy px-3 py-1 rounded border border-blue-900 text-xs">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="text-slate-300">RTS Act 2015 Live Compliance:</span>
+<span class="font-bold text-emerald-400">99.4%</span>
+</div>
+<!-- Global Quick Search -->
+<div class="relative w-64">
+<input class="w-full bg-slate-900/60 text-white placeholder-slate-400 text-xs rounded border border-slate-600 px-2.5 py-1.5 focus:outline-none focus:border-amber-400" placeholder="Search clearances, SLAs, metrics... (Ctrl+K)" type="text"/>
+</div>
+<!-- Language & Accessibility -->
+<div class="flex items-center space-x-2 text-xs border-l border-slate-700 pl-3">
+<div class="flex space-x-1 font-mono text-[11px] text-slate-300">
+<button class="hover:text-white px-1">A-</button>
+<button class="hover:text-white font-bold px-1">A</button>
+<button class="hover:text-white px-1">A+</button>
+</div>
+<span class="text-slate-600">|</span>
+<button class="text-xs font-medium text-amber-300 hover:text-white">मराठी</button>
+</div>
+<!-- Leadership User Profile -->
+<div class="flex items-center space-x-2 border-l border-slate-700 pl-3">
+<div class="w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold text-xs shadow-inner">
+            AD
+          </div>
+<div class="leading-tight">
+<div class="font-semibold text-xs text-white">A. Deshmukh</div>
+<div class="text-[10px] text-slate-300">Addl. Chief Secretary</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- END: Institutional Top Header -->
+<!-- BEGIN: Main Screen Layout Container -->
+<div class="max-w-[1440px] mx-auto flex min-h-[calc(100vh-64px)] bg-slate-100 shadow-xl border-x border-slate-300">
+<!-- BEGIN: Left Administrative Navigation Sidebar -->
+<aside class="w-64 bg-white border-r border-gov-border flex flex-col justify-between flex-shrink-0">
+<div class="py-3">
+<!-- Navigation Section -->
+<div class="px-3 pb-2 text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+          Apex Leadership Oversight
+        </div>
+<nav class="space-y-0.5 px-2">
+<a class="flex items-center space-x-2.5 px-3 py-2 text-xs font-medium rounded text-slate-700 hover:bg-slate-100" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>State Dashboard</span>
+</a>
+<a class="flex items-center space-x-2.5 px-3 py-2 text-xs font-semibold rounded bg-gov-deep text-white shadow-sm" href="#">
+<svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>Department Analytics</span>
+</a>
+<a class="flex items-center space-x-2.5 px-3 py-2 text-xs font-medium rounded text-slate-700 hover:bg-slate-100" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>Bottleneck Analytics</span>
+</a>
+<a class="flex items-center space-x-2.5 px-3 py-2 text-xs font-medium rounded text-slate-700 hover:bg-slate-100" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>SLA Monitoring (RTS)</span>
+</a>
+<a class="flex items-center space-x-2.5 px-3 py-2 text-xs font-medium rounded text-slate-700 hover:bg-slate-100" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>Scheme Analytics</span>
+</a>
+<a class="flex items-center space-x-2.5 px-3 py-2 text-xs font-medium rounded text-slate-700 hover:bg-slate-100" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>Grievance Analytics</span>
+</a>
+<a class="flex items-center space-x-2.5 px-3 py-2 text-xs font-medium rounded text-slate-700 hover:bg-slate-100" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>Cabinet Briefs &amp; Export</span>
+</a>
+</nav>
+<!-- Operational Desks Quick Jump -->
+<div class="px-3 pt-5 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+          Operational Switcher
+        </div>
+<div class="px-2 space-y-1">
+<a class="text-xs text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded flex items-center justify-between font-medium" href="#">
+<span>Inspector Desk</span>
+<span class="text-[10px] bg-blue-100 px-1.5 py-0.5 rounded text-blue-800">5 New</span>
+</a>
+<a class="text-xs text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded flex items-center justify-between font-medium" href="#">
+<span>Scrutiny Officer Desk</span>
+<span class="text-[10px] bg-blue-100 px-1.5 py-0.5 rounded text-blue-800">12 Pending</span>
+</a>
+<a class="text-xs text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded flex items-center justify-between font-medium" href="#">
+<span>System Master Config</span>
+</a>
+</div>
+</div>
+<!-- Statutory Mandate Information Box -->
+<div class="p-3 m-2 bg-slate-50 border border-slate-200 rounded text-[11px] text-slate-600 leading-relaxed">
+<div class="font-bold text-slate-800 mb-1 flex items-center gap-1">
+<svg class="w-3.5 h-3.5 text-gov-accent" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" fill-rule="evenodd"></path></svg>
+          Statutory Oversight Scope
+        </div>
+        State Apex Review under Maharashtra RTS Act 2015 Sec. 19. All inter-departmental clearances are monitored with automated SLA breach escalations.
+      </div>
+</aside>
+<!-- END: Left Administrative Navigation Sidebar -->
+<!-- BEGIN: Main Leadership Workspace -->
+<main class="flex-1 p-5 overflow-y-auto">
+<!-- BEGIN: Filters & Date Control Header -->
+<div class="bg-white p-3 rounded-lg border border-gov-border shadow-sm mb-4 flex flex-wrap items-center justify-between gap-3" data-purpose="dashboard-filters">
+<div>
+<h2 class="text-lg font-bold text-slate-800 tracking-tight">Department Performance &amp; Clearances Monitoring</h2>
+<p class="text-xs text-slate-500">Real-time statutory clearance metrics across notified Government bodies</p>
+</div>
+<div class="flex items-center space-x-2">
+<!-- Date Range Selector -->
+<div class="flex items-center bg-slate-50 border border-slate-300 rounded px-2.5 py-1 text-xs">
+<span class="text-slate-500 mr-1.5 font-medium">Period:</span>
+<select class="bg-transparent font-semibold text-slate-800 border-none p-0 text-xs focus:ring-0 cursor-pointer">
+<option>Jan 2024 – Dec 2024</option>
+<option>Q3 (Oct-Dec 2024)</option>
+<option>Previous Fiscal (2023-24)</option>
+</select>
+</div>
+<!-- District Filter -->
+<div class="flex items-center bg-slate-50 border border-slate-300 rounded px-2.5 py-1 text-xs">
+<span class="text-slate-500 mr-1.5 font-medium">District:</span>
+<select class="bg-transparent font-semibold text-slate-800 border-none p-0 text-xs focus:ring-0 cursor-pointer">
+<option>All Districts (36)</option>
+<option>Pune</option>
+<option>Mumbai Suburban</option>
+<option>Thane</option>
+<option>Nagpur</option>
+<option>Chhatrapati Sambhajinagar</option>
+</select>
+</div>
+<!-- Industry Sector Filter -->
+<div class="flex items-center bg-slate-50 border border-slate-300 rounded px-2.5 py-1 text-xs">
+<span class="text-slate-500 mr-1.5 font-medium">Sector:</span>
+<select class="bg-transparent font-semibold text-slate-800 border-none p-0 text-xs focus:ring-0 cursor-pointer">
+<option>All Industry Sectors</option>
+<option>Automobile &amp; Auto Ancillary</option>
+<option>Chemicals &amp; Petrochemicals</option>
+<option>IT &amp; ITES</option>
+<option>Textiles &amp; Apparel</option>
+</select>
+</div>
+<!-- Action Button: Export Executive Report -->
+<button class="bg-gov-deep hover:bg-gov-navy text-white text-xs font-medium px-3 py-1.5 rounded flex items-center space-x-1.5 shadow-sm">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>Cabinet Brief (PDF)</span>
+</button>
+</div>
+</div>
+<!-- END: Filters & Date Control Header -->
+<!-- BEGIN: Top Summary KPI Cards (From Reference Collage) -->
+<div class="grid grid-cols-6 gap-3 mb-5" data-purpose="summary-kpis">
+<!-- 1. Total Applications -->
+<div class="bg-white p-3 rounded-lg border border-gov-border shadow-sm">
+<div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Total Applications</div>
+<div class="mt-1 flex items-baseline justify-between">
+<span class="text-xl font-bold text-slate-900">12,480</span>
+<span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1 py-0.5 rounded border border-emerald-200">+14.2% YoY</span>
+</div>
+<div class="text-[10px] text-slate-400 mt-1">Across 42 clearances</div>
+</div>
+<!-- 2. Submitted / In Scrutiny -->
+<div class="bg-white p-3 rounded-lg border border-gov-border shadow-sm">
+<div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Under Scrutiny</div>
+<div class="mt-1 flex items-baseline justify-between">
+<span class="text-xl font-bold text-blue-700">2,140</span>
+<span class="text-[10px] text-blue-700 font-medium bg-blue-50 px-1 py-0.5 rounded border border-blue-200">17.1% Active</span>
+</div>
+<div class="text-[10px] text-slate-400 mt-1">Desk &amp; Joint inspection</div>
+</div>
+<!-- 3. Approved Clearances -->
+<div class="bg-white p-3 rounded-lg border border-gov-border shadow-sm">
+<div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Clearances Granted</div>
+<div class="mt-1 flex items-baseline justify-between">
+<span class="text-xl font-bold text-emerald-700">9,642</span>
+<span class="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-1 py-0.5 rounded border border-emerald-200">77.2% Grant</span>
+</div>
+<div class="text-[10px] text-slate-400 mt-1">Digital certificates issued</div>
+</div>
+<!-- 4. Rejected / Closed -->
+<div class="bg-white p-3 rounded-lg border border-gov-border shadow-sm">
+<div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Rejected / Returned</div>
+<div class="mt-1 flex items-baseline justify-between">
+<span class="text-xl font-bold text-red-600">698</span>
+<span class="text-[10px] text-red-700 font-medium bg-red-50 px-1 py-0.5 rounded border border-red-200">5.6% Rate</span>
+</div>
+<div class="text-[10px] text-slate-400 mt-1">Statutory non-compliance</div>
+</div>
+<!-- 5. Average Turnaround -->
+<div class="bg-white p-3 rounded-lg border border-gov-border shadow-sm">
+<div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Avg. Turnaround</div>
+<div class="mt-1 flex items-baseline justify-between">
+<span class="text-xl font-bold text-slate-900">18.4 <span class="text-xs font-normal text-slate-500">Days</span></span>
+<span class="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-1 py-0.5 rounded border border-emerald-200">Target: 21d</span>
+</div>
+<div class="text-[10px] text-emerald-600 mt-1">Reduced by 7.6 days</div>
+</div>
+<!-- 6. State SLA Compliance -->
+<div class="bg-white p-3 rounded-lg border border-gov-border shadow-sm bg-gradient-to-br from-white to-emerald-50/40">
+<div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">RTS SLA Compliance</div>
+<div class="mt-1 flex items-baseline justify-between">
+<span class="text-xl font-bold text-emerald-700">94.8%</span>
+<span class="text-[10px] text-emerald-800 font-semibold">Mandated</span>
+</div>
+<div class="text-[10px] text-slate-500 mt-1">Within notified timelines</div>
+</div>
+</div>
+<!-- END: Top Summary KPI Cards -->
+<!-- BEGIN: Navigation Tabs for Analytical Sections -->
+<div class="border-b border-slate-300 mb-4 flex space-x-6 text-xs font-medium">
+<button class="py-2 border-b-2 border-gov-navy text-gov-navy font-bold flex items-center space-x-1.5">
+<span>1. Department-wise Performance (Panel 8)</span>
+<span class="bg-blue-100 text-gov-navy text-[10px] px-1.5 py-0.2 rounded-full">6 Departments</span>
+</button>
+<button class="py-2 text-slate-500 hover:text-slate-800 flex items-center space-x-1.5">
+<span>2. Process Bottlenecks &amp; Delays (Panel 9)</span>
+</button>
+<button class="py-2 text-slate-500 hover:text-slate-800 flex items-center space-x-1.5">
+<span>3. Government Schemes Analytics (Panel 10)</span>
+</button>
+<button class="py-2 text-slate-500 hover:text-slate-800 flex items-center space-x-1.5">
+<span>4. RTS Grievances &amp; Appeals (Panel 11)</span>
+</button>
+</div>
+<!-- END: Navigation Tabs -->
+<!-- BEGIN: Department-wise Performance Section (Panel 8 from reference) -->
+<div class="bg-white rounded-lg border border-gov-border shadow-sm mb-5 p-4" data-purpose="department-performance">
+<div class="flex items-center justify-between mb-3">
+<div>
+<h3 class="text-sm font-bold text-slate-800">State Department Clearance Volumes &amp; Disposals</h3>
+<p class="text-[11px] text-slate-500">Cross-department comparison: Total applications submitted, granted, and rejected</p>
+</div>
+<!-- Legend -->
+<div class="flex items-center space-x-4 text-xs">
+<div class="flex items-center space-x-1.5">
+<span class="w-3 h-3 rounded-sm bg-blue-600 inline-block"></span>
+<span class="text-slate-600 font-medium">Submitted</span>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="w-3 h-3 rounded-sm bg-emerald-600 inline-block"></span>
+<span class="text-slate-600 font-medium">Approved</span>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="w-3 h-3 rounded-sm bg-red-600 inline-block"></span>
+<span class="text-slate-600 font-medium">Rejected</span>
+</div>
+</div>
+</div>
+<!-- Stylized Department Bar Visualization (Faithful to panel 8 bar chart) -->
+<div class="bg-slate-50 p-4 rounded border border-slate-200 mb-4">
+<div class="h-44 flex items-end justify-between gap-6 px-4 border-b border-slate-300 pb-2">
+<!-- Industries Bar Group -->
+<div class="flex-1 flex flex-col items-center">
+<div class="w-full flex items-end justify-center space-x-1 h-36">
+<!-- Submitted: 1240 -->
+<div class="w-1/4 bg-blue-600 rounded-t h-[95%]" title="Submitted: 1,240"></div>
+<!-- Approved: 892 -->
+<div class="w-1/4 bg-emerald-600 rounded-t h-[68%]" title="Approved: 892"></div>
+<!-- Rejected: 126 -->
+<div class="w-1/4 bg-red-600 rounded-t h-[10%]" title="Rejected: 126"></div>
+</div>
+<span class="text-[11px] font-semibold text-slate-700 mt-2">Industries</span>
+</div>
+<!-- Environment (MPCB) Bar Group -->
+<div class="flex-1 flex flex-col items-center">
+<div class="w-full flex items-end justify-center space-x-1 h-36">
+<!-- Submitted: 980 -->
+<div class="w-1/4 bg-blue-600 rounded-t h-[75%]" title="Submitted: 980"></div>
+<!-- Approved: 640 -->
+<div class="w-1/4 bg-emerald-600 rounded-t h-[49%]" title="Approved: 640"></div>
+<!-- Rejected: 210 -->
+<div class="w-1/4 bg-red-600 rounded-t h-[16%]" title="Rejected: 210"></div>
+</div>
+<span class="text-[11px] font-semibold text-slate-700 mt-2">Environment (MPCB)</span>
+</div>
+<!-- Labour Bar Group -->
+<div class="flex-1 flex flex-col items-center">
+<div class="w-full flex items-end justify-center space-x-1 h-36">
+<!-- Submitted: 620 -->
+<div class="w-1/4 bg-blue-600 rounded-t h-[48%]" title="Submitted: 620"></div>
+<!-- Approved: 480 -->
+<div class="w-1/4 bg-emerald-600 rounded-t h-[37%]" title="Approved: 480"></div>
+<!-- Rejected: 60 -->
+<div class="w-1/4 bg-red-600 rounded-t h-[5%]" title="Rejected: 60"></div>
+</div>
+<span class="text-[11px] font-semibold text-slate-700 mt-2">Labour (DISH)</span>
+</div>
+<!-- Urban Development Bar Group -->
+<div class="flex-1 flex flex-col items-center">
+<div class="w-full flex items-end justify-center space-x-1 h-36">
+<!-- Submitted: 540 -->
+<div class="w-1/4 bg-blue-600 rounded-t h-[42%]" title="Submitted: 540"></div>
+<!-- Approved: 320 -->
+<div class="w-1/4 bg-emerald-600 rounded-t h-[25%]" title="Approved: 320"></div>
+<!-- Rejected: 140 -->
+<div class="w-1/4 bg-red-600 rounded-t h-[11%]" title="Rejected: 140"></div>
+</div>
+<span class="text-[11px] font-semibold text-slate-700 mt-2">Urban Dev (MIDC)</span>
+</div>
+<!-- Fire Services Bar Group -->
+<div class="flex-1 flex flex-col items-center">
+<div class="w-full flex items-end justify-center space-x-1 h-36">
+<!-- Submitted: 430 -->
+<div class="w-1/4 bg-blue-600 rounded-t h-[33%]" title="Submitted: 430"></div>
+<!-- Approved: 312 -->
+<div class="w-1/4 bg-emerald-600 rounded-t h-[24%]" title="Approved: 312"></div>
+<!-- Rejected: 90 -->
+<div class="w-1/4 bg-red-600 rounded-t h-[7%]" title="Rejected: 90"></div>
+</div>
+<span class="text-[11px] font-semibold text-slate-700 mt-2">Fire Services</span>
+</div>
+<!-- Energy Bar Group -->
+<div class="flex-1 flex flex-col items-center">
+<div class="w-full flex items-end justify-center space-x-1 h-36">
+<!-- Submitted: 380 -->
+<div class="w-1/4 bg-blue-600 rounded-t h-[29%]" title="Submitted: 380"></div>
+<!-- Approved: 276 -->
+<div class="w-1/4 bg-emerald-600 rounded-t h-[21%]" title="Approved: 276"></div>
+<!-- Rejected: 74 -->
+<div class="w-1/4 bg-red-600 rounded-t h-[6%]" title="Rejected: 74"></div>
+</div>
+<span class="text-[11px] font-semibold text-slate-700 mt-2">Energy (MSEDCL)</span>
+</div>
+</div>
+<div class="flex justify-between text-[10px] text-slate-500 pt-1">
+<span>Scale: 0 - 1,400 clearances</span>
+<span>Source: MahaUdyam State Service Bus (Updated live)</span>
+</div>
+</div>
+<!-- High-Density Institutional Performance Table (Faithful to panel 8 table) -->
+<div class="overflow-x-auto">
+<table class="w-full text-left dense-table border border-slate-200 divide-y divide-slate-200">
+<thead class="bg-slate-100 text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+<tr>
+<th class="py-2">Department Name</th>
+<th class="text-right">Applications</th>
+<th class="text-right">Approved</th>
+<th class="text-right">Rejected</th>
+<th class="text-right">Avg. Turnaround (Days)</th>
+<th class="text-center">SLA Compliance</th>
+<th class="text-center">Review Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 text-xs font-medium text-slate-800 bg-white">
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="font-bold text-gov-deep flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                  Industries Department (DoI)
+                </td>
+<td class="text-right font-mono font-semibold">1,240</td>
+<td class="text-right font-mono text-emerald-700 font-semibold">892</td>
+<td class="text-right font-mono text-red-600">126</td>
+<td class="text-right font-mono">18</td>
+<td class="text-center">
+<span class="inline-block px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    78%
+                  </span>
+</td>
+<td class="text-center">
+<button class="text-blue-700 hover:text-blue-900 font-semibold hover:underline text-xs">Drilldown</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="font-bold text-gov-deep flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-amber-600"></span>
+                  Environment Department (MPCB)
+                </td>
+<td class="text-right font-mono font-semibold">980</td>
+<td class="text-right font-mono text-emerald-700 font-semibold">640</td>
+<td class="text-right font-mono text-red-600">210</td>
+<td class="text-right font-mono text-amber-700 font-bold">25</td>
+<td class="text-center">
+<span class="inline-block px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                    65%
+                  </span>
+</td>
+<td class="text-center">
+<button class="text-blue-700 hover:text-blue-900 font-semibold hover:underline text-xs">Drilldown</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="font-bold text-gov-deep flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                  Labour Department (DISH)
+                </td>
+<td class="text-right font-mono font-semibold">620</td>
+<td class="text-right font-mono text-emerald-700 font-semibold">480</td>
+<td class="text-right font-mono text-red-600">60</td>
+<td class="text-right font-mono">15</td>
+<td class="text-center">
+<span class="inline-block px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    82%
+                  </span>
+</td>
+<td class="text-center">
+<button class="text-blue-700 hover:text-blue-900 font-semibold hover:underline text-xs">Drilldown</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="font-bold text-gov-deep flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-amber-600"></span>
+                  Urban Development (MIDC SPA)
+                </td>
+<td class="text-right font-mono font-semibold">540</td>
+<td class="text-right font-mono text-emerald-700 font-semibold">320</td>
+<td class="text-right font-mono text-red-600">140</td>
+<td class="text-right font-mono text-amber-700 font-bold">28</td>
+<td class="text-center">
+<span class="inline-block px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                    60%
+                  </span>
+</td>
+<td class="text-center">
+<button class="text-blue-700 hover:text-blue-900 font-semibold hover:underline text-xs">Drilldown</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="font-bold text-gov-deep flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+                  Fire Services (Directorate of MFS)
+                </td>
+<td class="text-right font-mono font-semibold">430</td>
+<td class="text-right font-mono text-emerald-700 font-semibold">312</td>
+<td class="text-right font-mono text-red-600">90</td>
+<td class="text-right font-mono">12</td>
+<td class="text-center">
+<span class="inline-block px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    88%
+                  </span>
+</td>
+<td class="text-center">
+<button class="text-blue-700 hover:text-blue-900 font-semibold hover:underline text-xs">Drilldown</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="font-bold text-gov-deep flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+                  Energy Department (MSEDCL)
+                </td>
+<td class="text-right font-mono font-semibold">380</td>
+<td class="text-right font-mono text-emerald-700 font-semibold">276</td>
+<td class="text-right font-mono text-red-600">74</td>
+<td class="text-right font-mono">20</td>
+<td class="text-center">
+<span class="inline-block px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                    75%
+                  </span>
+</td>
+<td class="text-center">
+<button class="text-blue-700 hover:text-blue-900 font-semibold hover:underline text-xs">Drilldown</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- END: Department-wise Performance Section -->
+<!-- BEGIN: Process Bottlenecks & Executive Insights (Panels 9, 10, 11 Reference Layout) -->
+<div class="grid grid-cols-12 gap-5 mb-5">
+<!-- Left: Process Bottlenecks (Panel 9 Reference) -->
+<div class="col-span-7 bg-white rounded-lg border border-gov-border shadow-sm p-4" data-purpose="bottlenecks-panel">
+<div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-200">
+<div>
+<h3 class="text-sm font-bold text-slate-800">Process Bottlenecks &amp; Delays</h3>
+<p class="text-[11px] text-slate-500">Identify stages with maximum procedural pendency</p>
+</div>
+<span class="text-[10px] bg-red-100 text-red-800 font-bold px-2 py-0.5 rounded border border-red-200">
+              Scrutiny Bottleneck Flagged
+            </span>
+</div>
+<div class="space-y-3">
+<!-- Stage 1: Application Scrutiny (18 Days) -->
+<div>
+<div class="flex justify-between text-xs font-semibold mb-1 text-slate-700">
+<span class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-red-600"></span>
+                  Application Scrutiny Stage
+                </span>
+<span class="font-mono text-red-700 font-bold">18 Days (Overdue +4d)</span>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-3">
+<div class="bg-red-600 h-3 rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<!-- Stage 2: Inspection Scheduling (12 Days) -->
+<div>
+<div class="flex justify-between text-xs font-semibold mb-1 text-slate-700">
+<span>Joint Inspection Scheduling</span>
+<span class="font-mono text-amber-700 font-bold">12 Days</span>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-3">
+<div class="bg-amber-500 h-3 rounded-full" style="width: 55%"></div>
+</div>
+</div>
+<!-- Stage 3: Inspection Completion (10 Days) -->
+<div>
+<div class="flex justify-between text-xs font-semibold mb-1 text-slate-700">
+<span>Inspection Report Upload (GIS Tagged)</span>
+<span class="font-mono text-slate-700">10 Days</span>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-3">
+<div class="bg-blue-600 h-3 rounded-full" style="width: 45%"></div>
+</div>
+</div>
+<!-- Stage 4: Competent Authority Decision (8 Days) -->
+<div>
+<div class="flex justify-between text-xs font-semibold mb-1 text-slate-700">
+<span>Competent Authority Decision</span>
+<span class="font-mono text-slate-700">8 Days</span>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-3">
+<div class="bg-blue-500 h-3 rounded-full" style="width: 35%"></div>
+</div>
+</div>
+<!-- Stage 5: Certificate Issuance (5 Days) -->
+<div>
+<div class="flex justify-between text-xs font-semibold mb-1 text-slate-700">
+<span>Digital Certificate / NOC Issuance</span>
+<span class="font-mono text-emerald-700 font-bold">5 Days</span>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-3">
+<div class="bg-emerald-600 h-3 rounded-full" style="width: 22%"></div>
+</div>
+</div>
+</div>
+<!-- Bottleneck Insights Callout Box (from Panel 9) -->
+<div class="mt-4 p-3 bg-amber-50/70 border border-amber-200 rounded text-xs leading-relaxed">
+<div class="font-bold text-amber-900 mb-1 flex items-center gap-1.5">
+<svg class="w-4 h-4 text-amber-700" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" fill-rule="evenodd"></path></svg>
+              Statutory Bottleneck Insights
+            </div>
+<ul class="list-disc list-inside space-y-1 text-slate-700 text-[11px]">
+<li><strong>Maximum delays</strong> observed in application scrutiny stage at MPCB and Urban Development desks.</li>
+<li>Inspection scheduling delays are prominent in Environment and Industries departments (avg. 4.2 days overdue).</li>
+<li>Average overall turnaround reduced to <strong>18 days</strong> from 26 days after RTS auto-escalation integration.</li>
+</ul>
+</div>
+</div>
+<!-- Right: Operational Preview Panels (Schemes & Grievances - Panels 10 & 11) -->
+<div class="col-span-5 space-y-4">
+<!-- Government Schemes Analytics Card (Panel 10) -->
+<div class="bg-white rounded-lg border border-gov-border shadow-sm p-4" data-purpose="scheme-analytics">
+<div class="flex items-center justify-between pb-2 border-b border-slate-200">
+<h3 class="text-sm font-bold text-slate-800">Government Schemes &amp; Direct Benefit</h3>
+<span class="text-[10px] text-blue-800 bg-blue-50 px-2 py-0.5 rounded font-mono font-bold border border-blue-200">Panel 10</span>
+</div>
+<div class="grid grid-cols-3 gap-2 my-3 text-center">
+<div class="bg-slate-50 p-2 rounded border border-slate-200">
+<div class="text-[10px] text-slate-500 uppercase">Beneficiaries</div>
+<div class="text-base font-bold text-gov-deep mt-0.5">1,248</div>
+<div class="text-[9px] text-slate-400">Applications</div>
+</div>
+<div class="bg-emerald-50 p-2 rounded border border-emerald-200">
+<div class="text-[10px] text-emerald-800 uppercase font-semibold">Approved</div>
+<div class="text-base font-bold text-emerald-700 mt-0.5">892</div>
+<div class="text-[9px] text-emerald-600">71.4% Sanctioned</div>
+</div>
+<div class="bg-amber-50 p-2 rounded border border-amber-200">
+<div class="text-[10px] text-amber-800 uppercase font-semibold">Disbursed</div>
+<div class="text-base font-bold text-amber-700 mt-0.5">₹ 320 Cr</div>
+<div class="text-[9px] text-amber-600">State Incentive</div>
+</div>
+</div>
+<!-- Mini Trendline Graphic representation -->
+<div class="p-2 bg-slate-50 rounded border border-slate-200">
+<div class="flex justify-between text-[11px] text-slate-600 font-medium mb-1">
+<span>Scheme Applications vs Disbursals</span>
+<span class="text-emerald-700 font-bold">+18.5% Growth MoM</span>
+</div>
+<!-- Simple SVG Sparkline -->
+<svg class="w-full h-8 text-blue-600" fill="none" viewbox="0 0 300 40">
+<path d="M0 35 Q 50 25, 100 28 T 200 15 T 300 5" fill="none" stroke="#2563eb" stroke-width="2.5"></path>
+<path d="M0 38 Q 50 32, 100 30 T 200 22 T 300 12" fill="none" stroke="#16a34a" stroke-dasharray="3 3" stroke-width="2"></path>
+</svg>
+<div class="flex justify-between text-[9px] text-slate-400">
+<span>Jan</span><span>Apr</span><span>Jul</span><span>Oct</span><span>Dec</span>
+</div>
+</div>
+</div>
+<!-- RTS Grievance Analytics Card (Panel 11) -->
+<div class="bg-white rounded-lg border border-gov-border shadow-sm p-4" data-purpose="grievance-analytics">
+<div class="flex items-center justify-between pb-2 border-b border-slate-200">
+<div>
+<h3 class="text-sm font-bold text-slate-800">Grievance Redressal (RTS Sec 19)</h3>
+<span class="text-[10px] text-slate-500">First &amp; Second Appellate Authority review</span>
+</div>
+<span class="text-[10px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded font-mono font-bold border border-slate-300">Panel 11</span>
+</div>
+<div class="flex items-center justify-between mt-3 gap-3">
+<!-- Radial/Donut representation -->
+<div class="w-24 h-24 relative flex items-center justify-center flex-shrink-0">
+<svg class="w-24 h-24 transform -rotate-90" viewbox="0 0 36 36">
+<!-- Background circle -->
+<path class="text-slate-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4.5"></path>
+<!-- Resolved circle: 78% -->
+<path class="text-emerald-600" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="78, 100" stroke-width="4.5"></path>
+</svg>
+<div class="absolute text-center">
+<span class="text-base font-bold text-slate-800">230</span>
+<div class="text-[9px] text-slate-500 uppercase leading-tight">Total</div>
+</div>
+</div>
+<!-- Metric Counts -->
+<div class="flex-1 space-y-1.5 text-xs">
+<div class="flex justify-between items-center">
+<span class="flex items-center gap-1 text-slate-600">
+<span class="w-2 h-2 rounded-full bg-emerald-600"></span> Resolved:
+                  </span>
+<span class="font-bold text-emerald-700 font-mono">180 (78%)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="flex items-center gap-1 text-slate-600">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span> Pending Scrutiny:
+                  </span>
+<span class="font-bold text-amber-700 font-mono">35 (15%)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="flex items-center gap-1 text-slate-600">
+<span class="w-2 h-2 rounded-full bg-red-500"></span> Reopened / Escalated:
+                  </span>
+<span class="font-bold text-red-600 font-mono">15 (7%)</span>
+</div>
+<div class="pt-1 border-t border-slate-200 flex justify-between items-center text-[11px]">
+<span class="text-slate-500">Avg. Resolution:</span>
+<span class="font-bold text-gov-deep">12 Days (-20%)</span>
+</div>
+</div>
+</div>
+<!-- Redressal Desk Link -->
+<div class="mt-3 pt-2 border-t border-slate-100 flex justify-end">
+<a class="text-xs font-bold text-blue-700 hover:text-blue-900 flex items-center gap-1" href="#">
+<span>Access Grievance Escalation Queue</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- END: Process Bottlenecks & Executive Insights -->
+</main>
+<!-- END: Main Leadership Workspace -->
+</div>
+<!-- END: Main Screen Layout Container -->
+<!-- BEGIN: Institutional Footer -->
+<footer class="bg-gov-deep text-slate-300 text-[11px] border-t border-slate-700 py-3">
+<div class="max-w-[1440px] mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-2">
+<div class="flex items-center space-x-2">
+<span class="font-semibold text-white">MahaUdyam One</span>
+<span>• Single Window System for Progressive Maharashtra</span>
+<span class="text-slate-500">|</span>
+<span>Implemented under Maharashtra Right to Public Services Act, 2015</span>
+</div>
+<div class="flex items-center space-x-4">
+<span>Hosted by: State Data Centre (MahaIT / NIC)</span>
+<span class="text-slate-500">|</span>
+<span class="bg-slate-800 px-2 py-0.5 rounded text-[10px] text-amber-300 font-mono">STQC &amp; WCAG 2.1 AA Compliant</span>
+<span class="text-slate-400">Version 3.4.1 (Build 2026.09)</span>
+</div>
+</div>
+</footer>
+<!-- END: Institutional Footer -->
+</body></html>
